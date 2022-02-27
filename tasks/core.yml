@@ -1,3 +1,5 @@
   - name: Install core programs
+    become: yes
+    become_user: root
     apt:
-      name: ["git", "curl"]
+      name: ["firefox", "neovim"]
