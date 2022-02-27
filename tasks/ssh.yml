@@ -1,0 +1,31 @@
+- name: Ensure .ssh directory exists.
+  become: yes
+  become_user: root
+  file:
+    dest: "{{ dest_key | dirname }}"
+    mode: 0700
+    state: directory
+  tags:
+    - dotfiles
+    - ssh
+- name: Install ssh key
+  become: yes
+  become_user: root
+  copy:
+    src: "{{ source_key }}"
+    dest: "{{ dest_key }}"
+    mode: 0600
+  tags:
+    - dotfiles
+    - ssh
+- name: Set authorized key took from file
+  authorized_key:
+    user: "{{ lookup('pipe', 'whoami') }}"
+    state: present
+    # key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
+    key: "{{ lookup('file', item) }}"
+  with_fileglob:
+    - /home/{{ lookup('pipe', 'whoami') }}/.ssh/*.pub
+  tags:
+    - dotfiles
+    - ssh

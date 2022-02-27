@@ -1,0 +1,3 @@
+  - name: Install core programs
+    apt:
+      name: ["git", "curl"]

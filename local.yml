@@ -1,0 +1,23 @@
+- hosts: localhost
+  vars:
+    source_key: "./.ssh/id_rsa"
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+  pre_tasks:
+    - name: Update cache
+      become: yes
+      become_user: root
+      apt:
+        force_apt_get: true
+        update_cache: true
+        state: present
+      tags:
+      - zsh
+      - node
+      - dotfiles
+      - install
+      - core
+
+  tasks:
+  - import_tasks: tasks/ssh.yml
+  - import_tasks: tasks/zsh.yml
+  - import_tasks: tasks/node.yml
