@@ -3,6 +3,7 @@
   vars:
     source_key: "./.ssh/id_rsa"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+    GH_USER: "aldevv"
 
   pre_tasks:
     - name: Update cache
@@ -22,6 +23,11 @@
       tags:
         - dotfiles
         - ssh
+
+    - import_tasks: tasks/dotfiles.yml
+      tags:
+        - dotfiles
+
     - import_tasks: tasks/zsh.yml
       tags:
         - zsh
