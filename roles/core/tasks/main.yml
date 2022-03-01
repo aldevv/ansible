@@ -1,0 +1,20 @@
+---
+- include_tasks: arch.yml
+  when: ansible_os_family == "Arch"
+  tags:
+    - core
+
+- include_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+  tags:
+    - core
+
+- include_tasks: redhat.yml
+  when: ansible_os_family == "RedHat"
+  tags:
+    - core
+
+- include_tasks: freebsd.yml
+  when: ansible_os_family == "FreeBSD"
+  tags:
+    - core

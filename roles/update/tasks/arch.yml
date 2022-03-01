@@ -1,0 +1,7 @@
+---
+- name: Update cache
+  become: yes
+  community.general.pacman:
+    update_cache: yes
+  # upgrade: yes
+

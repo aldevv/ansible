@@ -1,0 +1,89 @@
+  - name: Install core programs
+    become: yes
+    become_user: root
+    tags:
+      - core
+    community.general.pacman:
+      name:
+        - "noto-fonts-emoji"
+        - "base-devel"
+        - "cmake"
+        - "flatpak"
+        - "npm"
+        - "rclone"
+        - "autorandr"
+        - "picom"
+        - "sxhkd"
+        - "dunst"
+        - "sxiv"
+        - "pavucontrol"
+        - "firefox"
+        - "zathura"
+        - "zathura-pdf-mupdf"
+        - "xsel"
+        - "xclip"
+        - "fcitx"
+        - "fcitx-qt5"
+        - "fcitx-configtool"
+        - "fcitx-mozc"
+        - "fzf"
+        - "tldr"
+        - "shfmt"
+        - "python-pipenv"
+        - "pass"
+        - "tmux"
+        - ripgrep
+        - ripgrep-all
+        - chromium
+        - exa
+        - fd
+        - unzip
+
+  - name: Install misc programs
+    become: yes
+    become_user: root
+    tags:
+      - core
+    community.general.pacman:
+      name:
+        - docker
+        - docker-compose
+        - ctags
+        - rust
+        - github-cli
+        - rsync
+        - alacritty
+        - shellcheck
+        - flameshot
+
+  - name: Install package from AUR using a Pacman compatible AUR helper
+    community.general.pacman:
+      name:
+        - xidlehook
+        - ngrok
+        - gitflow-avh
+        - stylua
+        - selene-linter
+        - notion-app-enhanced
+        - libxft-bgra-git
+        - neovide-git
+        - pacolog
+        - insomnia-bin
+        - downgrade
+        - clipcat
+        - git-secret
+      executable: yay
+      extra_args: --builddir /var/cache/yay
+
+  - name: Install qmk programs for custom keyboard
+    become: yes
+    become_user: root
+    tags:
+      - core
+    community.general.pacman:
+      name:
+        - "avr-libc"
+        - "avr-gcc"
+        - "avrdude"
+      executable: yay
+
