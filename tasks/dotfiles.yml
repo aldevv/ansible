@@ -1,11 +1,17 @@
-  - name: Install chezmoi
+  - name: Install bitwarden-cli arch
+    become: yes
+    npm:
+      name: "@bitwarden/cli"
+      global: yes
+
+  - name: Chezmoi Install
     become: yes
     shell: sh -c "$(curl -fsLS chezmoi.io/get) -b /bin"
     # if the repo is named dotfiles then is ok with just this line
     # shell: sh -c "$(curl -fsLS chezmoi.io/get) -b /bin" -- init --apply {{ GH_USER }}
 
-  - name: init dotfiles
+  - name: Chezmoi Init
     shell: chezmoi init git@github.com:{{ GH_USER }}/dotfiles-chez.git
 
-  - name: apply dotfiles
+  - name: Chezmoi Apply
     shell: chezmoi apply

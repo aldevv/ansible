@@ -3,7 +3,7 @@
     become_user: root
     tags:
       - core
-    community.general.pacman:
+    pacman:
       name:
         - "noto-fonts-emoji"
         - "base-devel"
@@ -38,13 +38,15 @@
         - exa
         - fd
         - unzip
+        - bitwarden
+        - bitwarden-cli
 
   - name: Install misc programs
     become: yes
     become_user: root
     tags:
       - core
-    community.general.pacman:
+    pacman:
       name:
         - docker
         - docker-compose
@@ -57,7 +59,7 @@
         - flameshot
 
   - name: Install package from AUR using a Pacman compatible AUR helper
-    community.general.pacman:
+    pacman:
       name:
         - xidlehook
         - ngrok
@@ -80,7 +82,7 @@
     become_user: root
     tags:
       - core
-    community.general.pacman:
+    pacman:
       name:
         - "avr-libc"
         - "avr-gcc"

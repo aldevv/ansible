@@ -5,17 +5,19 @@
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
     GH_USER: "aldevv"
 
-  pre_tasks:
-    - name: Update cache
-      become: yes
-      apt:
-        update_cache: yes
-        force_apt_get: yes
-        state: present
+
   roles:
     - role: update # updates the package manager
       tags:
         - zsh
+        - core
+
+    - role: npm # updates the package manager
+      tags:
+        - dotfiles
+
+    - role: core # updates the package manager
+      tags:
         - core
 
   tasks:

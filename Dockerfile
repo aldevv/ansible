@@ -12,13 +12,15 @@ RUN apt-get update && \
 
 FROM base AS kanon
 ARG TAGS
-RUN addgroup --gid 1000 kanon \
-    && adduser --gecos kanon --uid 1000 --gid 1000 --disabled-password kanon \
-    && adduser kanon sudo \
-        && echo "kanon:pass" | chpasswd
+ENV USER=kanon
+RUN addgroup --gid 1000 ${USER} \
+    && adduser --gecos ${USER} --uid 1000 --gid 1000 --disabled-password ${USER} \
+    && adduser ${USER} sudo \
+        && echo "${USER}:pass" | chpasswd
 
 USER kanon
-WORKDIR /home/kanon
+RUN mkdir /home/${USER}/ansible
+WORKDIR /home/${USER}/ansible
 
 FROM kanon
 COPY . .
