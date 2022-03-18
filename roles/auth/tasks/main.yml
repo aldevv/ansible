@@ -32,4 +32,4 @@
     state: present
     key: "{{ lookup('file', item) }}"
   with_fileglob:
-    - /home/{{ lookup('pipe', 'whoami') }}/.ssh/*.pub
+    - /home/{{ user }}/.ssh/*.pub
