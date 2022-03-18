@@ -1,10 +1,9 @@
   - name: Install core programs
     become: yes
-    become_user: root
     apt:
       name:
-        - "noto-fonts-emoji"
-        - "base-devel"
+        - "fonts-noto-color-emoji"
+        - "build-essential"
         - "cmake"
         - "flatpak"
         - "npm"
@@ -17,16 +16,15 @@
         - "pavucontrol"
         - "firefox"
         - "zathura"
-        - "zathura-pdf-mupdf"
+        - "zathura-pdf-poppler"
         - "xsel"
         - "xclip"
         - "fcitx"
-        - "fcitx-qt5"
-        - "fcitx-configtool"
+        - "fcitx-frontend-qt5"
+        - "kde-config-fcitx"
         - "fcitx-mozc"
         - "fzf"
         - "tldr"
-        - "shfmt"
         - "python-pipenv"
         - "pass"
         - "tmux"
@@ -40,7 +38,6 @@
 
   - name: Install misc programs
     become: yes
-    become_user: root
     apt:
       name:
         - docker
@@ -53,9 +50,18 @@
         - shellcheck
         - flameshot
 
+  - name: Install development programs
+    become: yes
+    apt:
+      name:
+        # - shfmt --> not found in the ubuntu repositories
+    tags:
+      - core
+      - develop
+
+
   - name: Install qmk programs for custom keyboard
     become: yes
-    become_user: root
     apt:
       name:
         - "avr-libc"

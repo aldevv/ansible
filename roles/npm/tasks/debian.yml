@@ -1,0 +1,5 @@
+---
+- name: Install NPM
+  become: yes
+  apt:
+    name: npm

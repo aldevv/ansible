@@ -5,5 +5,3 @@
     force_apt_get: yes
     update_cache: yes
     state: present
-  register: mivar
-- debug: var=mivar

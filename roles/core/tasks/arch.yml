@@ -1,6 +1,5 @@
   - name: Install core programs
     become: yes
-    become_user: root
     tags:
       - core
     pacman:
@@ -28,7 +27,6 @@
         - "fcitx-mozc"
         - "fzf"
         - "tldr"
-        - "shfmt"
         - "python-pipenv"
         - "pass"
         - "tmux"
@@ -77,10 +75,19 @@
       executable: yay
       extra_args: --builddir /var/cache/yay
 
+  - name: Install programs for development
+    become: yes
+    pacman:
+      name:
+        - shfmt
+    tags:
+      - core
+      - develop
+
   - name: Install qmk programs for custom keyboard
     become: yes
-    become_user: root
     tags:
+      - qmk
       - core
     pacman:
       name:

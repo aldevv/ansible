@@ -1,0 +1,14 @@
+---
+- name: Install bitwarden-cli
+  become: yes
+  npm:
+    name: "@bitwarden/cli"
+    global: yes
+  when: "ansible_facts['os_family'] != 'Arch'"
+
+- name: Install bitwarden-cli arch
+  become: yes
+  pacman:
+    name: "bitwarden-cli"
+  check_mode: yes
+  when: "ansible_facts['os_family'] == 'Arch'"

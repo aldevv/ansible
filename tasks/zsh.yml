@@ -11,10 +11,15 @@
   - name: Install oh-my-zsh
     shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 
-  - name: give autossuggestions
+  - name: give autossuggestions to zsh
     ansible.builtin.git:
-       repo: https://github.com/zsh-users/zsh-autosuggestions
+       repo: "https://github.com/zsh-users/zsh-autosuggestions"
        dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
 
+  - name: give highlightings to zsh
+    ansible.builtin.git:
+       repo: "https://github.com/zsh-users/zsh-syntax-highlighting"
+       dest: "~/.oh-my-zsh/plugins/zsh-syntax-highlighting"
+
   - name: update our zshrc
-    shell: sed -i 's/(git/(git zsh-autosuggestions/' ~/.zshrc
+    shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc

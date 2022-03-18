@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -n "$1" ]; then
-    docker run -it -v "$PWD:/home/kanon/ansible" --rm boot $1
+    docker run -it -v "$PWD:/home/kanon/ansible" --rm boot ansible-playbook -t dotfiles-full -K --ask-vault-pass local.yml
 else
-    docker run -it -v "$PWD:/home/kanon/ansible" --rm boot ansible-playbook local.yml --ask-vault-pass
+    docker run -it -v "$PWD:/home/kanon/ansible" --rm boot bash
 fi

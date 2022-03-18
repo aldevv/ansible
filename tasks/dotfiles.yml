@@ -1,17 +1,26 @@
-  - name: Install bitwarden-cli arch
-    become: yes
-    npm:
-      name: "@bitwarden/cli"
-      global: yes
+
+  - name: get bitwarden
+    import_role:
+      name: bitwarden
+    tags:
+      - dotfiles-full
 
   - name: Chezmoi Install
     become: yes
     shell: sh -c "$(curl -fsLS chezmoi.io/get) -b /bin"
-    # if the repo is named dotfiles then is ok with just this line
-    # shell: sh -c "$(curl -fsLS chezmoi.io/get) -b /bin" -- init --apply {{ GH_USER }}
+    tags:
+      - dotfiles
+      - dotfiles-full
 
   - name: Chezmoi Init
-    shell: chezmoi init git@github.com:{{ GH_USER }}/dotfiles-chez.git
+    # no need to confirm with a "yes"
+    shell: GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" chezmoi init {{ dotfiles_repo }}
+    tags:
+      - dotfiles
+      - dotfiles-full
 
   - name: Chezmoi Apply
     shell: chezmoi apply
+    tags:
+      - dotfiles
+      - dotfiles-full
