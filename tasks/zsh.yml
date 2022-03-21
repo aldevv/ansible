@@ -17,7 +17,7 @@
        dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
 
   - name: give highlightings to zsh
-    ansible.builtin.git:
+    git:
        repo: "https://github.com/zsh-users/zsh-syntax-highlighting"
        dest: "~/.oh-my-zsh/plugins/zsh-syntax-highlighting"
 

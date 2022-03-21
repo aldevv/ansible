@@ -1,26 +1,73 @@
 
-  - name: get bitwarden
-    import_role:
-      name: bitwarden
-    tags:
-      - dotfiles-full
-
-  - name: Chezmoi Install
+  - name: Install Dependencies
     become: yes
-    shell: sh -c "$(curl -fsLS chezmoi.io/get) -b /bin"
+    package:
+      name:
+        - stow
+        - git
+        - gpg
     tags:
       - dotfiles
       - dotfiles-full
 
-  - name: Chezmoi Init
-    # no need to confirm with a "yes"
-    shell: GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" chezmoi init {{ dotfiles_repo }}
+  - name: Clone Git-Secret
+    git:
+      repo: "https://github.com/sobolevn/git-secret.git"
+      dest: "~/.local/build/git-secret"
     tags:
       - dotfiles
       - dotfiles-full
 
-  - name: Chezmoi Apply
-    shell: chezmoi apply
+  - name: Build Git-Secret
+    make:
+      chdir: "~/.local/build/git-secret"
+      target: build
+    tags:
+      - dotfiles
+      - dotfiles-full
+
+  - name: Install Git-Secret
+    become: yes
+    make:
+      chdir: "/home/{{ user }}/.local/build/git-secret"
+      target: install
+      params: PREFIX="/usr/local"
+    tags:
+      - dotfiles
+      - dotfiles-full
+
+  # - name: Download repo
+  #   git:
+  #      repo: "{{ dotfiles_repo }}"
+  #      dest: "~/.dotfiles"
+  #   tags:
+  #     - dotfiles
+  #     - dotfiles-full
+
+  - name: remove this step
+    shell: cp -r ~/ansible/.dotfiles ~/.dotfiles
+    tags:
+      - dotfiles
+      - dotfiles-full
+
+  - name: make the linux script executable
+    file:
+      path: ~/.dotfiles/linux
+      mode: '0777'
+    tags:
+      - dotfiles
+      - dotfiles-full
+
+  - name: make the install script executable
+    file:
+      path: ~/.dotfiles/install
+      mode: '0777'
+    tags:
+      - dotfiles
+      - dotfiles-full
+
+  - name: Stow folders
+    shell: ~/.dotfiles/linux
     tags:
       - dotfiles
       - dotfiles-full

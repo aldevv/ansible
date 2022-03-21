@@ -2,30 +2,42 @@
 
   vars:
     user: "{{ lookup('pipe', 'whoami') }}"
-    dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
+    # dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
+    dotfiles_repo: "git@github.com:aldevv/.dotfiles.git"
 
   roles:
-    - role: auth # updates the package manager
+    - role: auth
       tags:
         - dotfiles-full # for auth
         - dotfiles
         - ssh
 
-    - role: update # updates the package manager
+    - role: update
       tags:
         - zsh
         - core
 
-    - role: core # updates the package manager
+    - role: core
       tags:
         - core
 
   tasks:
-    - include_tasks: tasks/dotfiles.yml
+
+    - name: Check oh-my-zsh is installed
+      stat:
+        path: ~/.oh-my-zsh/
+      register: p
       tags:
+        - zsh
         - dotfiles
-        - dotfiles-full
 
     - import_tasks: tasks/zsh.yml
       tags:
         - zsh
+        - dotfiles
+      when: p.stat.exists == False
+
+    - include_tasks: tasks/dotfiles.yml
+      tags:
+        - dotfiles
+        - dotfiles-full
