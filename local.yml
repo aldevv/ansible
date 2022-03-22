@@ -9,17 +9,28 @@
   roles:
     - role: auth
       tags:
+        - install
         - dotfiles-full # for auth
         - ssh
 
     - role: update
       tags:
-        - zsh
+        - install
         - core
+        - neovim
+        - zsh
 
     - role: core
       tags:
+        - install
         - core
+
+    - role: base-devel
+      tags:
+        - install
+        - core
+        - base-devel
+        - neovim
 
   tasks:
 
@@ -28,12 +39,14 @@
         path: ~/.oh-my-zsh/
       register: p
       tags:
+        - install
         - zsh
         - dotfiles
         - dotfiles-full
 
     - import_tasks: tasks/zsh.yml
       tags:
+        - install
         - zsh
         - dotfiles
         - dotfiles-full
@@ -41,5 +54,13 @@
 
     - include_tasks: tasks/dotfiles.yml
       tags:
+        - install
+        - neovim
         - dotfiles
         - dotfiles-full
+
+    - include_tasks: tasks/neovim.yml
+      tags:
+        - install
+        - neovim
+        - core

@@ -1,0 +1,11 @@
+  - name: Install core programs
+    become: yes
+    pacman:
+      name:
+        - base-devel
+        - cmake
+        - pkg-config
+        - unzip
+        - ninja
+        - tree-sitter
+        - curl

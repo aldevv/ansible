@@ -1,0 +1,72 @@
+- name: Stow nvim dotfile
+  shell: cd ~/.dotfiles && stow nvim && cd -
+  tags:
+    - core
+    - neovim
+
+- name: Create bujo folder
+  shell: mkdir -p ~/.cache/bujo
+  tags:
+    - install
+    - core
+    - neovim
+
+# current version in ubuntu is 0,4,4 which doesn't have lua
+# - name: Install Neovim
+#   become: yes
+#   package:
+#     name: neovim
+#   tags:
+#     - nvim
+#     - core
+#     - install
+
+- name: Clone Neovim
+  git:
+    repo: 'https://github.com/neovim/neovim.git'
+    dest: "{{ lookup('env', 'HOME') }}/.local/build/neovim"
+    depth: 1
+  tags:
+    - install
+    - core
+    - neovim
+
+- name: Build neovim
+  shell: "cd {{ lookup('env', 'HOME') }}/.local/build/neovim && make clean && make -j 20"
+  tags:
+    - install
+    - core
+    - neovim
+
+- name: Install neovim
+  become: true
+  shell: "cd {{ lookup('env', 'HOME') }}/.local/build/neovim && make install"
+  tags:
+    - install
+    - core
+    - neovim
+
+- name: Install Packer
+  git:
+    repo: https://github.com/wbthomason/packer.nvim
+    dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+    depth: 1
+  tags:
+    - install
+    - core
+    - neovim
+
+
+- name: Install Packer
+  shell: nvim -c "PackerInstall"
+  tags:
+    - install
+    - core
+    - neovim
+
+- name: Compile Packer
+  shell: nvim -c "PackerCompile"
+  tags:
+    - install
+    - core
+    - neovim

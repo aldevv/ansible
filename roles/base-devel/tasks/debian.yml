@@ -1,0 +1,19 @@
+  - name: Install core programs
+    become: yes
+    apt:
+      name:
+        - build-essential
+        - cmake
+        - pkg-config
+        - automake
+        - libtool
+        - unzip
+        - ninja-build
+        - gettext
+        - libtool
+        - libtool-bin
+        - autoconf
+        - g++
+        - curl
+        - doxygen
+
