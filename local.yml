@@ -3,13 +3,13 @@
   vars:
     user: "{{ lookup('pipe', 'whoami') }}"
     # dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
-    dotfiles_repo: "git@github.com:aldevv/.dotfiles.git"
+    dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
+    dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
 
   roles:
     - role: auth
       tags:
         - dotfiles-full # for auth
-        - dotfiles
         - ssh
 
     - role: update
@@ -30,11 +30,13 @@
       tags:
         - zsh
         - dotfiles
+        - dotfiles-full
 
     - import_tasks: tasks/zsh.yml
       tags:
         - zsh
         - dotfiles
+        - dotfiles-full
       when: p.stat.exists == False
 
     - include_tasks: tasks/dotfiles.yml

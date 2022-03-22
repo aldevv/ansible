@@ -36,20 +36,30 @@
       - dotfiles
       - dotfiles-full
 
-  # - name: Download repo
-  #   git:
-  #      repo: "{{ dotfiles_repo }}"
-  #      dest: "~/.dotfiles"
+  - name: Download repo
+    git:
+       repo: "{{ dotfiles_repo }}"
+       dest: "~/.dotfiles"
+       recursive: no
+    tags:
+      - dotfiles
+
+  - name: Download repo full
+    git:
+       repo: "{{ dotfiles_repo_full }}"
+       dest: "~/.dotfiles"
+       recursive: yes
+       accept_hostkey: yes
+
+    tags:
+      - dotfiles-full
+
+  # - name: remove this step
+  #   shell: cp -r ~/ansible/.dotfiles ~/.dotfiles
   #   tags:
   #     - dotfiles
   #     - dotfiles-full
-
-  - name: remove this step
-    shell: cp -r ~/ansible/.dotfiles ~/.dotfiles
-    tags:
-      - dotfiles
-      - dotfiles-full
-
+  #
   - name: make the linux script executable
     file:
       path: ~/.dotfiles/linux
