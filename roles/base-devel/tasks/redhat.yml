@@ -1,0 +1,17 @@
+  - name: Install Basic Dependencies
+    become: yes
+    yum:
+      name:
+        - ninja-build
+        - libtool
+        - autoconf
+        - automake
+        - cmake
+        - gcc
+        - gcc-c++
+        - make
+        - pkgconfig
+        - unzip
+        - patch
+        - gettext
+        - curl

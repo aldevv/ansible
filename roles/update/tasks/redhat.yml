@@ -1,0 +1,6 @@
+- name: Update cache
+  become: yes
+  yum:
+    update_cache: yes
+  # upgrade: yes
+

@@ -1,4 +1,4 @@
-  - name: Install core programs
+  - name: Install Basic Dependencies
     become: yes
     apt:
       name:
