@@ -1,0 +1,73 @@
+- name: Check if cargo is installed
+  shell: command -v cargo
+  register: cargo_exists
+  ignore_errors: yes
+
+- name: Install rust programs dependencies Debian
+  when: ansible_facts['os_family'] == 'Debian'
+  become: yes
+  package:
+    name: 
+      - cmake
+      - pkgconf
+      - libfontconfig
+      - libfontconfig1-dev
+      - libxcb1-dev
+      - libxcb-shape0-dev 
+      - libxcb-xfixes0-dev 
+      - libfreetype6-dev 
+      - libxkbcommon-dev 
+      - python3
+      - build-essential
+      - pandoc
+      - poppler-utils
+      - ffmpeg
+ 
+  ignore_errors: yes
+
+
+- name: Download Rust Installer
+  when: cargo_exists is failed
+  get_url:
+    url: https://sh.rustup.rs
+    dest: /tmp/sh.rustup.rs
+    mode: '0755'
+    force: 'yes'
+
+- name: Install rust/cargo
+  when: cargo_exists is failed
+  shell: /tmp/sh.rustup.rs -y
+
+- name: Check shell
+  shell: command -v zsh
+  register: zsh_exists
+  ignore_errors: yes
+
+- name: Add cargo env to shell
+  when: zsh_exists is succeeded
+  shell: echo "[ -f ~/.cargo/env ] && source $HOME/.cargo/env" >> {{ ansible_env.HOME }}/.zshrc
+
+- name: Add cargo env to shell
+  when: zsh_exists is failed
+  shell: echo "[ -f ~/.cargo/env ] && source $HOME/.cargo/env" >> {{ ansible_env.HOME }}/.bashrc
+
+- name: Add cargo to path
+  when: cargo_exists is failed
+  become: yes
+  shell: "ln -s {{ ansible_env.HOME }}/.cargo/bin/* /usr/local/bin/"
+
+- name: Install toolchain
+  when: cargo_exists is failed
+  shell: |
+        rustup install stable
+        rustup default stable
+
+#- name: Install cargo programs
+#  when: ansible_facts['os_family'] != 'Arch' and cargo_exists is failed
+#  community.general.cargo:
+#    name:
+#      - 
+
+- name: Install ripgrep_all
+  shell: cargo install --locked ripgrep_all
+

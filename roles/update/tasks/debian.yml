@@ -1,4 +1,49 @@
 ---
+- name: Check alacritty repo exists
+  shell: grep -q "mmstick76/alacritty" /etc/apt/sources.list
+  register: alacritty_exists
+  ignore_errors: yes
+
+- name: Check github-cli key
+  stat:
+    path: /usr/share/keyrings/githubcli-archive-keyring.gpg
+  register: gh
+
+- name: Check microsoft key
+  stat:
+    path: /usr/share/keyrings/githubcli-archive-keyring.gpg
+  register: mic
+
+- name: Add alacritty repository
+  when: alacritty_exists is failed
+  become: yes
+  shell: add-apt-repository -y ppa:mmstick76/alacritty
+
+- name: Add github-cli key
+  become: yes
+  shell: curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+  when: gh.stat.exists == False
+
+- name: Add microsoft key
+  become: yes
+  shell: curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
+  when: mic.stat.exists == False
+
+  # hardcoded amd64
+- name: Add github-cli repo
+  become: yes
+  apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main'
+    state: present
+  when: gh.stat.exists == False
+
+- name: Add microsoft repo
+  become: yes
+  apt_repository:
+    repo: 'deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main'
+    state: present
+  when: mic.stat.exists == False
+
 - name: Update cache
   become: yes
   apt:

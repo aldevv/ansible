@@ -16,4 +16,5 @@
         - g++
         - curl
         - doxygen
+        - npm
 

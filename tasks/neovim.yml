@@ -1,5 +1,7 @@
 - name: Stow nvim dotfile
-  shell: cd ~/.dotfiles && stow nvim && cd -
+  shell: stow nvim && cd -
+  args:
+    chdir: "{{ ansible_env.HOME }}/.dotfiles"
   tags:
     - core
     - neovim
@@ -21,10 +23,11 @@
 #     - core
 #     - install
 
+
 - name: Clone Neovim
   git:
     repo: 'https://github.com/neovim/neovim.git'
-    dest: "{{ lookup('env', 'HOME') }}/.local/build/neovim"
+    dest: "{{ nvim_home }}"
     depth: 1
   tags:
     - install
@@ -32,21 +35,26 @@
     - neovim
 
 - name: Build neovim
-  shell: "cd {{ lookup('env', 'HOME') }}/.local/build/neovim && make clean && make -j 20"
+  become: yes
+  shell: "make clean && make -j 20"
+  args:
+    chdir: "{{ nvim_home }}"
   tags:
     - install
     - core
     - neovim
 
 - name: Install neovim
-  become: true
-  shell: "cd {{ lookup('env', 'HOME') }}/.local/build/neovim && make install"
+  become: yes
+  shell: "make install"
+  args:
+    chdir: "{{ nvim_home }}"
   tags:
     - install
     - core
     - neovim
 
-- name: Install Packer
+- name: Download Packer
   git:
     repo: https://github.com/wbthomason/packer.nvim
     dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim
@@ -57,16 +65,19 @@
     - neovim
 
 
-- name: Install Packer
-  shell: nvim -c "PackerInstall"
+- name: Run PackerInstall
+  shell: nvim --headless -c 'PackerInstall'
   tags:
     - install
     - core
     - neovim
 
-- name: Compile Packer
-  shell: nvim -c "PackerCompile"
+- name: Run PackerSync
+  shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
   tags:
     - install
     - core
     - neovim
+
+
+

@@ -1,69 +1,74 @@
-  - name: Install core programs
-    become: yes
-    apt:
-      name:
-        - "fonts-noto-color-emoji"
-        - "build-essential"
-        - "cmake"
-        - "flatpak"
-        - "npm"
-        - "rclone"
-        - "autorandr"
-        - "picom"
-        - "sxhkd"
-        - "dunst"
-        - "sxiv"
-        - "pavucontrol"
-        - "firefox"
-        - "zathura"
-        - "zathura-pdf-poppler"
-        - "xsel"
-        - "xclip"
-        - "fcitx"
-        - "fcitx-frontend-qt5"
-        - "kde-config-fcitx"
-        - "fcitx-mozc"
-        - "fzf"
-        - "tldr"
-        - "python-pipenv"
-        - "pass"
-        - "tmux"
-        - ripgrep
-        - ripgrep-all
-        - chromium
-        - exa
-        - fd
-        - unzip
+- name: Install core programs
+  become: yes
+  apt:
+    name:
+      - "fonts-noto-color-emoji"
+      - "build-essential"
+      - "cmake"
+      - "flatpak"
+      - "npm"
+      - "rclone"
+      - "autorandr"
+      - "picom"
+      - "sxhkd"
+      - "dunst"
+      - "sxiv"
+      - "pavucontrol"
+      - "firefox"
+      - "zathura"
+      - "zathura-pdf-poppler"
+      - "xsel"
+      - "xclip"
+      - "fcitx"
+      - "fcitx-frontend-qt5"
+      - "kde-config-fcitx"
+      - "fcitx-mozc"
+      - "fzf"
+      - "tldr"
+      - "pipenv"
+      - "pass"
+      - "tmux"
+      - "chromium-browser"
+      - "unzip"
+      - "flameshot"
+      - "ripgrep"
+      - "fd-find"
+      - "exa"
+      - "alacritty"
 
 
-  - name: Install misc programs
-    become: yes
-    apt:
-      name:
-        - docker
-        - docker-compose
-        - ctags
-        - rust
-        - github-cli
-        - rsync
-        - alacritty
-        - shellcheck
-        - flameshot
-
-  - name: Install development programs
-    become: yes
-    apt:
-      name:
-        # - shfmt --> not found in the ubuntu repositories
-    tags:
-      - core
-      - develop
+- name: Install misc programs
+  become: yes
+  apt:
+    name:
+      - gh
+      - docker.io
+      - docker-compose
+      - exuberant-ctags
+      - rsync
+      - shellcheck
 
 
-  - name: Install qmk programs for custom keyboard
-    become: yes
-    apt:
-      name:
-        - "avr-libc"
-        - "avr-gcc"
-        - "avrdude"
+- import_tasks: ./custom/rust.yml
+  tags:
+    - install
+    - rust
+
+
+- name: Install development programs
+  become: yes
+  apt:
+    name:
+        - firefox
+  tags:
+    - core
+    - develop
+
+
+- name: Install qmk programs for custom keyboard
+  become: yes
+  apt:
+    name:
+      - "avr-libc"
+      - "gcc-avr"
+      - "avrdude"

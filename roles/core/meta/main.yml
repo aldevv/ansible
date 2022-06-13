@@ -1,2 +1,2 @@
 ---
-dependencies: ["update"]
+# no update since it would run it again!

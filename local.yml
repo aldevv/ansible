@@ -5,34 +5,33 @@
     # dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
     dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
     dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
+    nvim_home: "{{ ansible_env.HOME }}/.local/build/neovim"
 
   roles:
     - role: auth
       tags:
-        - install
         - dotfiles-full # for auth
         - ssh
 
     - role: update
       tags:
         - install
-        - core
         - neovim
         - zsh
-
-    - role: core
-      tags:
-        - install
-        - core
 
     - role: base-devel
       tags:
         - install
-        - core
         - base-devel
         - neovim
 
+    - role: core
+      tags:
+        - install
+
+
   tasks:
+  # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
 
     - name: Check oh-my-zsh is installed
       stat:
@@ -45,16 +44,15 @@
         - dotfiles-full
 
     - import_tasks: tasks/zsh.yml
+      when: p.stat.exists == False
       tags:
         - install
         - zsh
         - dotfiles
         - dotfiles-full
-      when: p.stat.exists == False
 
     - include_tasks: tasks/dotfiles.yml
       tags:
-        - install
         - neovim
         - dotfiles
         - dotfiles-full
@@ -63,4 +61,4 @@
       tags:
         - install
         - neovim
-        - core
+    
