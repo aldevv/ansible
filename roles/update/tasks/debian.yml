@@ -1,6 +1,6 @@
 ---
 - name: Check alacritty repo exists
-  shell: grep -q "mmstick76/alacritty" /etc/apt/sources.list
+  shell: ls /etc/apt/sources.list.d/ | grep -q "alacritty" 
   register: alacritty_exists
   ignore_errors: yes
 

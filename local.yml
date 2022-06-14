@@ -17,6 +17,7 @@
       tags:
         - install
         - neovim
+        - neovim-nightly
         - zsh
 
     - role: base-devel
@@ -24,6 +25,7 @@
         - install
         - base-devel
         - neovim
+        - neovim-nightly
 
     - role: core
       tags:
@@ -40,20 +42,17 @@
       tags:
         - install
         - zsh
-        - dotfiles
-        - dotfiles-full
 
     - import_tasks: tasks/zsh.yml
       when: p.stat.exists == False
       tags:
         - install
         - zsh
-        - dotfiles
-        - dotfiles-full
 
     - include_tasks: tasks/dotfiles.yml
       tags:
         - neovim
+        - neovim-nightly
         - dotfiles
         - dotfiles-full
 
@@ -61,4 +60,5 @@
       tags:
         - install
         - neovim
+        - neovim-nightly
     

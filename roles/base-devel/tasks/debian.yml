@@ -1,4 +1,4 @@
-  - name: Install Basic Dependencies
+  - name: Install Basic Development Dependencies
     become: yes
     apt:
       name:
@@ -17,4 +17,6 @@
         - curl
         - doxygen
         - npm
+        - python3-venv
+        - python3-pip
 

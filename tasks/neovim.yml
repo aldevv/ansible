@@ -3,81 +3,122 @@
   args:
     chdir: "{{ ansible_env.HOME }}/.dotfiles"
   tags:
-    - core
+    - install
     - neovim
+    - neovim-nightly
 
 - name: Create bujo folder
-  shell: mkdir -p ~/.cache/bujo
+  shell: mkdir -p ~/.cache/bujo ~/.local/build
   tags:
     - install
-    - core
     - neovim
+    - neovim-nightly
 
-# current version in ubuntu is 0,4,4 which doesn't have lua
-# - name: Install Neovim
-#   become: yes
-#   package:
-#     name: neovim
-#   tags:
-#     - nvim
-#     - core
-#     - install
+- name: Install neovim dependencies
+  block:
+    - name: Install Arch deps
+      when: ansible_os_family == 'Arch'
+      become: yes
+      pacman: 
+        name:
+          - ripgrep
+          - fd
+
+    - name: Install Debian deps
+      when: ansible_os_family == 'Debian'
+      become: yes
+      apt: 
+        name:
+          - ripgrep
+          - fd-find
+    
+    - name: Install pynvim
+      pip:
+        name: 
+         - pynvim
+         - github3.py
+    
+    - name: Install npm neovim pkg
+      become: yes
+      npm:
+        name: neovim
+        global: yes
+  tags:
+   - neovim
+   - neovim-nightly
+   - install
+
+- name: Install neovim nightly
+  block:
+    - name: Clone Neovim nightly
+      git:
+        repo: 'https://github.com/neovim/neovim.git'
+        dest: "{{ nvim_home }}-nightly"
+        depth: 1
+    
+    - name: Build neovim nightly
+      become: yes
+      shell: "make clean && make -j 20"
+      args:
+        chdir: "{{ nvim_home }}-nightly"
+    
+    - name: Install neovim nightly
+      become: yes
+      shell: "make install"
+      args:
+        chdir: "{{ nvim_home }}-nightly"
+  tags:
+    - neovim-nightly
 
 
-- name: Clone Neovim
-  git:
-    repo: 'https://github.com/neovim/neovim.git'
-    dest: "{{ nvim_home }}"
-    depth: 1
+- name: Install neovim stable
+  block:
+    - name: Get latest neovim tag
+      community.general.github_release:
+        user: 'neovim'
+        repo: 'neovim'
+        action: latest_release
+      register: nvim_stable
+    
+    - name: Unarchive neovim-stable
+      unarchive:
+        src: "https://github.com/neovim/neovim/releases/download/{{ nvim_stable['tag'] }}/nvim-linux64.tar.gz"
+        dest: "{{ ansible_env.HOME }}/.local/build/"
+        remote_src: true
+
+    - name: Rename neovim folder
+      shell: "mv {{ ansible_env.HOME }}/.local/build/nvim-linux64 {{ nvim_home }}"
+
+    - name: Symlink neovim binary
+      become: yes
+      file:
+        src: "{{ nvim_home }}/bin/nvim"
+        dest: /usr/local/bin/nvim
+        state: link
   tags:
     - install
-    - core
     - neovim
 
-- name: Build neovim
-  become: yes
-  shell: "make clean && make -j 20"
-  args:
-    chdir: "{{ nvim_home }}"
+
+- name: Setup neovim plugins
+  block: 
+    - name: Download Packer
+      git:
+        repo: https://github.com/wbthomason/packer.nvim
+        dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+        depth: 1
+    
+    - name: Run PackerSync
+      shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+      ignore_errors: yes
+    
+    
+    - name: Run LspInstall
+      shell: nvim --headless -c "LspInstall --sync pylsp" -c q 
+      ignore_errors: yes
   tags:
-    - install
-    - core
     - neovim
-
-- name: Install neovim
-  become: yes
-  shell: "make install"
-  args:
-    chdir: "{{ nvim_home }}"
-  tags:
+    - neovim-nightly
     - install
-    - core
-    - neovim
-
-- name: Download Packer
-  git:
-    repo: https://github.com/wbthomason/packer.nvim
-    dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-    depth: 1
-  tags:
-    - install
-    - core
-    - neovim
-
-
-- name: Run PackerInstall
-  shell: nvim --headless -c 'PackerInstall'
-  tags:
-    - install
-    - core
-    - neovim
-
-- name: Run PackerSync
-  shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-  tags:
-    - install
-    - core
-    - neovim
-
 
 

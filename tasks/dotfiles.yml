@@ -1,4 +1,4 @@
-  - name: Install Dependencies
+  - name: Install Dotfiles Dependencies
     become: yes
     package:
       name:
@@ -8,7 +8,7 @@
     tags:
       - install
       - neovim
-      - core
+      - neovim-nightly
       - dotfiles
       - dotfiles-full
     when: "ansible_facts['os_family'] != 'RedHat'"
@@ -48,6 +48,7 @@
     tags:
       - install
       - neovim
+      - neovim-nightly
       - dotfiles
       - dotfiles-full
 
@@ -59,6 +60,7 @@
        recursive: no
     tags:
       - neovim
+      - neovim-nightly
       - dotfiles
     when: r.stat.exists == False
 
