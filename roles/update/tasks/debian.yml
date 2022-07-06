@@ -9,10 +9,15 @@
     path: /usr/share/keyrings/githubcli-archive-keyring.gpg
   register: gh
 
-- name: Check microsoft key
+- name: check microsoft key
   stat:
-    path: /usr/share/keyrings/githubcli-archive-keyring.gpg
+    path: /etc/apt/sources.list.d/packages_microsoft_com_repos_code.list
   register: mic
+
+- name: check microsoft key 2
+  stat:
+    path: /etc/apt/sources.list.d/vscode.list
+  register: mic2
 
 - name: Add alacritty repository
   when: alacritty_exists is failed
@@ -26,8 +31,8 @@
 
 - name: Add microsoft key
   become: yes
-  shell: curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
-  when: mic.stat.exists == False
+  shell: curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+  when: mic.stat.exists == False and mic2.stat.exists == False
 
   # hardcoded amd64
 - name: Add github-cli repo
@@ -40,9 +45,9 @@
 - name: Add microsoft repo
   become: yes
   apt_repository:
-    repo: 'deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main'
+    repo: 'deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main'
     state: present
-  when: mic.stat.exists == False
+  when: mic.stat.exists == False and mic2.stat.exists == False
 
 - name: Update cache
   become: yes

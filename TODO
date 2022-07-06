@@ -1,0 +1,2 @@
+install st --> sudo apt install libharfbuzz-dev
+
