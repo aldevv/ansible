@@ -10,6 +10,9 @@
 - name: Install zsh
   when: p.stat.exists == False
   block:
+    - name: Create history file
+      shell: mkdir -p ~/.cache/zsh/ && touch ~/.cache/zsh/.zsh_history
+
     - name: Install xsel
       become: true
       package:
@@ -43,3 +46,24 @@
     - core
     - zsh
 
+- name: Check If Custom Theme Available
+  stat:
+    path: ~/.config/zsh/themes
+  register: p
+  tags:
+    - install
+    - core
+    - zsh
+
+- name: Install Custom Theme If Possible
+  when: p.stat.exists == True
+  file:
+    src: "{{ item }}"
+    dest: "~/.oh-my-zsh/custom/themes/{{ item | basename }}"
+    state: hard
+    force: true
+  with_fileglob: '~/.config/zsh/themes/*'
+  tags:
+    - install
+    - core
+    - zsh

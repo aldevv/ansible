@@ -47,32 +47,20 @@
   tasks:
   # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
 
-    - name: Install zsh
-      include_tasks: tasks/programs.yml
-      tags:
-        - core
-        - install
-        - zsh
-    # - name: Check oh-my-zsh is installed
-    #   stat:
-      #   path: ~/.oh-my-zsh/
-      # register: p
-      # tags:
-      #   - install
-        # - zsh
-        #
-    # - import_tasks: tasks/zsh.yml
-    #   when: p.stat.exists == False
-      # tags:
-      #   - install
-        # - zsh
-
+    
     - include_tasks: tasks/dotfiles.yml
       tags:
         - neovim
         - neovim-nightly
         - dotfiles
         - dotfiles-full
+
+    - name: Install zsh
+      include_tasks: tasks/zsh.yml
+      tags:
+        - core
+        - install
+        - zsh
 
     - include_tasks: tasks/neovim.yml
       tags:
