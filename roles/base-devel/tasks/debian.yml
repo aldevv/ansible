@@ -2,7 +2,6 @@
     become: true
     apt:
       name:
-        - git
         - build-essential
         - cmake
         - pkg-config
@@ -20,6 +19,3 @@
         - npm
         - python3-venv
         - python3-pip
-
-
-  

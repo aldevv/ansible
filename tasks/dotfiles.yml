@@ -13,34 +13,29 @@
       - dotfiles-full
     when: "ansible_facts['os_family'] != 'RedHat'"
 
-  - name: Clone Git-Secret
-    git:
-      repo: "https://github.com/sobolevn/git-secret.git"
-      dest: "~/.local/build/git-secret"
-    tags:
-      - install
-      - dotfiles
-      - dotfiles-full
-
-  - name: Build Git-Secret
-    make:
-      chdir: "~/.local/build/git-secret"
-      target: build
-    tags:
-      - install
-      - dotfiles
-      - dotfiles-full
-
   - name: Install Git-Secret
-    become: true
-    make:
-      chdir: "/home/{{ user }}/.local/build/git-secret"
-      target: install
-      params: PREFIX="/usr/local"
+    block:
+      - name: Clone Git-Secret
+        git:
+          repo: "https://github.com/sobolevn/git-secret.git"
+          dest: "~/.local/build/git-secret"
+
+      - name: Build Git-Secret
+        make:
+          chdir: "~/.local/build/git-secret"
+          target: build
+
+      - name: Install Git-Secret
+        become: true
+        make:
+          chdir: "/home/{{ user }}/.local/build/git-secret"
+          target: install
+          params: PREFIX="/usr/local"
     tags:
       - dotfiles
       - dotfiles-full
       - install
+
   - name: Check repo is cloned
     stat:
       path: ~/.dotfiles/
@@ -75,36 +70,24 @@
       - install
     when: r.stat.exists == False
 
-  # - name: remove this step
-  #   shell: cp -r ~/ansible/.dotfiles ~/.dotfiles
-  #   tags:
-  #     - dotfiles
-  #     - dotfiles-full
-  #
-  - name: make the linux script executable
+  - name: make scripts executable
     file:
-      path: ~/.dotfiles/linux
+      path: "~/.dotfiles/{{ item }}"
       mode: '0777'
-    tags:
-      - dotfiles
-      - dotfiles-full
-      - install
-
-  - name: make the install script executable
-    file:
-      path: ~/.dotfiles/install
-      mode: '0777'
+    loop:
+      - "linux"
+      - "install"
     tags:
       - dotfiles
       - dotfiles-full
       - install
 
   - name: Stow folders
-    shell: ~/.dotfiles/linux
+    shell: ./linux
+    args:
+      chdir: ~/.dotfiles/
     tags:
       - dotfiles
       - dotfiles-full
       - install
 
-  # - name: Delete old .zsh config files (the default ones)
-  #   shell: rm ~/.zshrc ~/.zprofile ~/.zshenv

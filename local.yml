@@ -12,13 +12,14 @@
   roles:
     - role: auth
       tags:
-        - dotfiles-full # for auth
+        - dotfiles-full 
         - install
         - ssh
 
     - role: update
       tags:
         - install
+        - dotfiles-full 
         - neovim
         - neovim-nightly
         - zsh
@@ -46,19 +47,25 @@
   tasks:
   # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
 
-    - name: Check oh-my-zsh is installed
-      stat:
-        path: ~/.oh-my-zsh/
-      register: p
+    - name: Install zsh
+      include_tasks: tasks/programs.yml
       tags:
+        - core
         - install
         - zsh
-
-    - import_tasks: tasks/zsh.yml
-      when: p.stat.exists == False
-      tags:
-        - install
-        - zsh
+    # - name: Check oh-my-zsh is installed
+    #   stat:
+      #   path: ~/.oh-my-zsh/
+      # register: p
+      # tags:
+      #   - install
+        # - zsh
+        #
+    # - import_tasks: tasks/zsh.yml
+    #   when: p.stat.exists == False
+      # tags:
+      #   - install
+        # - zsh
 
     - include_tasks: tasks/dotfiles.yml
       tags:

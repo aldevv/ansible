@@ -1,30 +1,45 @@
-  - name: Install xsel
-    become: yes
-    package:
-      name: xsel
+- name: Check oh-my-zsh is installed
+  stat:
+    path: ~/.oh-my-zsh/
+  register: p
+  tags:
+    - install
+    - core
+    - zsh
 
-  - name: Install zsh
-    become: yes
-    become_user: root
-    apt: name=zsh
+- name: Install zsh
+  when: p.stat.exists == False
+  block:
+    - name: Install xsel
+      become: true
+      package:
+        name: xsel
 
-  - name: Make zsh the default shell
-    become: yes
-    become_user: root
-    shell: chsh -s $(which zsh)
+    - name: Install zsh
+      become: true
+      apt: name=zsh
 
-  - name: Install oh-my-zsh
-    shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+    - name: Make zsh the default shell
+      become: true
+      shell: chsh -s $(which zsh)
 
-  - name: give autossuggestions to zsh
-    ansible.builtin.git:
-       repo: "https://github.com/zsh-users/zsh-autosuggestions"
-       dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+    - name: Install oh-my-zsh
+      shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 
-  - name: give highlightings to zsh
-    git:
-       repo: "https://github.com/zsh-users/zsh-syntax-highlighting"
-       dest: "~/.oh-my-zsh/plugins/zsh-syntax-highlighting"
+    - name: give autossuggestions to zsh
+      git:
+         repo: "https://github.com/zsh-users/zsh-autosuggestions"
+         dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
 
-  - name: update our zshrc
-    shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc
+    - name: give highlightings to zsh
+      git:
+         repo: "https://github.com/zsh-users/zsh-syntax-highlighting"
+         dest: "~/.oh-my-zsh/plugins/zsh-syntax-highlighting"
+
+    - name: update our zshrc
+      shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc
+  tags:
+    - install
+    - core
+    - zsh
+
