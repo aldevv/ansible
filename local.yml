@@ -42,6 +42,7 @@
     - role: core
       tags:
         - install
+        - core
 
 
   tasks:
@@ -67,6 +68,7 @@
         - install
         - neovim
         - neovim-nightly
+        - core
 
     - include_tasks: tasks/suckless.yml
       tags:
@@ -75,4 +77,5 @@
         - st
         - dmenu
         - dwm
+        - core
        

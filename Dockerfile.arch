@@ -1,0 +1,21 @@
+FROM archlinux:latest as base
+WORKDIR /usr/local/bin
+RUN pacman --noconfirm -Sy archlinux-keyring
+RUN pacman --noconfirm -Sy ansible git make cmake sudo
+
+FROM base as kanon
+ARG TAGS
+ENV USER=kanon
+RUN groupadd --gid 1000 ${USER} \
+    && useradd --uid 1000 --gid 1000 -p "" ${USER} \
+    && usermod -aG wheel ${USER} \
+    && echo "${USER}:pass" | chpasswd
+RUN sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
+RUN mkdir -p /home/${USER}/ansible
+
+USER ${USER}
+WORKDIR /home/${USER}/ansible
+
+FROM kanon
+COPY . .
+CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
