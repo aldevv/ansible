@@ -1,2 +1,3 @@
-install st --> sudo apt install libharfbuzz-dev
+remove /usr/local/bin/nvim symlink when building normal neovim
+remove ~/.local/build/neovim when building normal neovim
 

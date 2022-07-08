@@ -1,7 +1,8 @@
   - name: Install Basic Development Dependencies
-    become: yes
+    become: true
     apt:
       name:
+        - git
         - build-essential
         - cmake
         - pkg-config
@@ -20,3 +21,5 @@
         - python3-venv
         - python3-pip
 
+
+  

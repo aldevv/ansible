@@ -5,12 +5,15 @@
     # dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
     dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
     dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
-    nvim_home: "{{ ansible_env.HOME }}/.local/build/neovim"
+    nvim_nightly_home: "{{ ansible_env.HOME }}/.local/build/neovim"
+    nvim_home: "{{ ansible_env.HOME }}/.local/programs/neovim"
+    suckless_home: "{{ ansible_env.HOME }}/.local/programs/suckless"
 
   roles:
     - role: auth
       tags:
         - dotfiles-full # for auth
+        - install
         - ssh
 
     - role: update
@@ -19,6 +22,10 @@
         - neovim
         - neovim-nightly
         - zsh
+        - suckless
+        - st
+        - dmenu
+        - dwm
 
     - role: base-devel
       tags:
@@ -26,6 +33,10 @@
         - base-devel
         - neovim
         - neovim-nightly
+        - suckless
+        - st
+        - dmenu
+        - dwm
 
     - role: core
       tags:
@@ -61,4 +72,12 @@
         - install
         - neovim
         - neovim-nightly
-    
+
+    - include_tasks: tasks/suckless.yml
+      tags:
+        - install
+        - suckless
+        - st
+        - dmenu
+        - dwm
+       

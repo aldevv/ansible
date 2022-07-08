@@ -7,6 +7,12 @@
     - neovim
     - neovim-nightly
 
+- name: Create programs folder
+  shell: mkdir -p ~/.local/programs
+  tags:
+    - install
+    - neovim
+
 - name: Create bujo folder
   shell: mkdir -p ~/.cache/bujo ~/.local/build
   tags:
@@ -18,7 +24,7 @@
   block:
     - name: Install Arch deps
       when: ansible_os_family == 'Arch'
-      become: yes
+      become: true
       pacman: 
         name:
           - ripgrep
@@ -26,7 +32,7 @@
 
     - name: Install Debian deps
       when: ansible_os_family == 'Debian'
-      become: yes
+      become: true
       apt: 
         name:
           - ripgrep
@@ -39,7 +45,7 @@
          - github3.py
     
     - name: Install npm neovim pkg
-      become: yes
+      become: true
       npm:
         name: neovim
         global: yes
@@ -53,20 +59,20 @@
     - name: Clone Neovim nightly
       git:
         repo: 'https://github.com/neovim/neovim.git'
-        dest: "{{ nvim_home }}-nightly"
+        dest: "{{ nvim_nightly_home }}-nightly"
         depth: 1
     
     - name: Build neovim nightly
-      become: yes
+      become: true
       shell: "make clean && make -j 20"
       args:
-        chdir: "{{ nvim_home }}-nightly"
+        chdir: "{{ nvim_nightly_home }}-nightly"
     
     - name: Install neovim nightly
-      become: yes
+      become: true
       shell: "make install"
       args:
-        chdir: "{{ nvim_home }}-nightly"
+        chdir: "{{ nvim_nightly_home }}-nightly"
   tags:
     - neovim-nightly
 
@@ -83,18 +89,19 @@
     - name: Unarchive neovim-stable
       unarchive:
         src: "https://github.com/neovim/neovim/releases/download/{{ nvim_stable['tag'] }}/nvim-linux64.tar.gz"
-        dest: "{{ ansible_env.HOME }}/.local/build/"
+        dest: "{{ ansible_env.HOME }}/.local/programs/"
         remote_src: true
 
     - name: Rename neovim folder
-      shell: "mv {{ ansible_env.HOME }}/.local/build/nvim-linux64 {{ nvim_home }}"
+      shell: "[ -d {{ nvim_home }} ] && rm -r {{ nvim_home }}; mv {{ ansible_env.HOME }}/.local/programs/nvim-linux64 {{ nvim_home }}"
 
     - name: Symlink neovim binary
-      become: yes
+      become: true
       file:
         src: "{{ nvim_home }}/bin/nvim"
         dest: /usr/local/bin/nvim
         state: link
+        force: true
   tags:
     - install
     - neovim
@@ -110,15 +117,13 @@
     
     - name: Run PackerSync
       shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-      ignore_errors: yes
+      ignore_errors: true
     
     
     - name: Run LspInstall
       shell: nvim --headless -c "LspInstall --sync pylsp" -c q 
-      ignore_errors: yes
+      ignore_errors: true
   tags:
     - neovim
     - neovim-nightly
     - install
-
-

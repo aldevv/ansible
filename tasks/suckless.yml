@@ -1,0 +1,84 @@
+- name: Install suckless dependencies
+  block:
+    - name: Install Suckless Deps debian
+      when: ansible_os_family == 'Debian'
+      become: true
+      apt:
+        name:
+          - libxft-dev
+          - libharfbuzz-dev
+          - libxinerama-dev
+          - libx11-xcb-dev
+          - libxcb-res0-dev
+            
+    - name: Install Suckless Deps arch
+      when: ansible_os_family == 'Arch'
+      become: true
+      pacman:
+        name:
+          - harfbuzz
+          - libxinerama
+          - libxcb
+          # - libxft-bgra --> from aur
+
+  tags:
+    - install
+    - suckless
+    - st
+    - dmenu
+    - dwm
+
+- name: Clone suckless programs
+  block:
+    - name: Create programs folder
+      shell: "mkdir -p {{ suckless_home }}"
+
+    - name: Clone suckless programs
+      git:
+        repo: 'https://github.com/aldevv/suckless.git'
+        dest: "{{ suckless_home }}"
+        force: true
+        depth: 1
+  tags:
+    - suckless
+    - st
+    - dmenu
+    - dwm
+    - install
+
+- name: Build all suckless programs
+  become: true
+  shell: "make clean && make && make install"
+  args:
+    chdir: "{{ suckless_home }}/{{ item }}"
+  loop:
+    - "st"
+    - "dwm"
+    - "dmenu"
+  tags:
+    - suckless
+    - install
+
+- name: Build st 
+  become: true
+  shell: "make clean && make && make install"
+  args:
+    chdir: "{{ suckless_home }}/st"
+  tags:
+    - st
+
+- name: Build dmenu 
+  become: true
+  shell: "make clean && make && make install"
+  args:
+    chdir: "{{ suckless_home }}/dmenu"
+  tags:
+    - dmenu
+
+- name: Build dwm 
+  become: true
+  shell: "make clean && make && make install"
+  args:
+    chdir: "{{ suckless_home }}/dwm"
+  tags:
+    - dwm
