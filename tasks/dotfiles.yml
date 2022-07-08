@@ -4,7 +4,6 @@
       name:
         - stow
         - git
-        - gpg
     tags:
       - install
       - neovim
@@ -14,6 +13,7 @@
     when: "ansible_facts['os_family'] != 'RedHat'"
 
   - name: Install Git-Secret
+    when: "ansible_facts['os_family'] != 'Archlinux'"
     block:
       - name: Clone Git-Secret
         git:

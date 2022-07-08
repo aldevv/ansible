@@ -9,9 +9,10 @@ ENV USER=kanon
 RUN groupadd --gid 1000 ${USER} \
     && useradd --uid 1000 --gid 1000 -p "" ${USER} \
     && usermod -aG wheel ${USER} \
-    && echo "${USER}:pass" | chpasswd
-RUN sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
-RUN mkdir -p /home/${USER}/ansible
+    && echo "${USER}:pass" | chpasswd \
+    && sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers \
+    && mkdir -p /home/${USER}/ansible \
+    && chown -R "${USER}:${USER}" /home/${USER}/
 
 USER ${USER}
 WORKDIR /home/${USER}/ansible

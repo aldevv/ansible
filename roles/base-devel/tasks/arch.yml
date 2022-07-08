@@ -1,7 +1,8 @@
   - name: Install Basic Dependencies
-    become: yes
+    become: true
     pacman:
       name:
+        - git
         - base-devel
         - cmake
         - pkg-config
@@ -9,3 +10,11 @@
         - ninja
         - tree-sitter
         - curl
+
+  - name: Install yay
+    shell: "if [ ! -x $(command -v yay) ]; then; git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin; cd ~/yay-bin; yes | makepkg -si; rm -rf ~/yay-bin; fi"
+    ignore_errors: true
+    no_log: true
+
+  - name: Update yay
+    shell: yay -Sy

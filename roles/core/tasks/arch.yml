@@ -1,5 +1,5 @@
   - name: Install core programs
-    become: yes
+    become: true
     tags:
       - core
     pacman:
@@ -40,10 +40,7 @@
         - bitwarden-cli
 
   - name: Install misc programs
-    become: yes
-    become_user: root
-    tags:
-      - core
+    become: true
     pacman:
       name:
         - docker
@@ -57,42 +54,32 @@
         - flameshot
 
   - name: Install package from AUR using a Pacman compatible AUR helper
-    pacman:
-      name:
+    shell: "[ -x $(command -v ngrok) ] && yay --noconfirm -S {{ item }}"
+    loop:
         - xidlehook
         - ngrok
         - gitflow-avh
         - stylua
         - selene-linter
         - notion-app-enhanced
-        - libxft-bgra-git
         - neovide-git
         - pacolog
         - insomnia-bin
         - downgrade
         - clipcat
         - git-secret
-      executable: yay
-      extra_args: --builddir /var/cache/yay
 
   - name: Install programs for development
-    become: yes
+    become: true
     pacman:
       name:
         - shfmt
-    tags:
-      - core
-      - develop
 
   - name: Install qmk programs for custom keyboard
-    become: yes
-    tags:
-      - qmk
-      - core
-    pacman:
-      name:
-        - "avr-libc"
-        - "avr-gcc"
-        - "avrdude"
-      executable: yay
+    become: true
+    shell: "[ -x $(command -v avrdude) ] && yay --noconfirm -S {{ item }}"
+    loop:
+      - "avr-libc"
+      - "avr-gcc"
+      - "avrdude"
 

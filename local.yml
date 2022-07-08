@@ -31,9 +31,10 @@
     - role: base-devel
       tags:
         - install
-        - base-devel
         - neovim
         - neovim-nightly
+        - core
+        - zsh
         - suckless
         - st
         - dmenu

@@ -12,14 +12,19 @@
           - libxcb-res0-dev
             
     - name: Install Suckless Deps arch
-      when: ansible_os_family == 'Arch'
-      become: true
-      pacman:
-        name:
-          - harfbuzz
-          - libxinerama
-          - libxcb
-          # - libxft-bgra --> from aur
+      when: ansible_os_family == 'Archlinux'
+      block:
+        - name: Pacman Deps
+          become: true
+          pacman:
+            name:
+              - harfbuzz
+              - libxinerama
+              - libxcb
+        - name: yay Deps
+          shell: "yay --noconfirm -S {{ item }}"
+          loop:
+            - libxft-bgra-git
 
   tags:
     - install

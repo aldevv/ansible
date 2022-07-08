@@ -20,7 +20,7 @@
 
     - name: Install zsh
       become: true
-      apt: name=zsh
+      package: name=zsh
 
     - name: Make zsh the default shell
       become: true

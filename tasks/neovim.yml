@@ -23,7 +23,7 @@
 - name: Install neovim dependencies
   block:
     - name: Install Arch deps
-      when: ansible_os_family == 'Arch'
+      when: ansible_os_family == 'Archlinux'
       become: true
       pacman: 
         name:
