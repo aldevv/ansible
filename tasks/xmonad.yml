@@ -1,0 +1,119 @@
+- name: Install dependencies
+  block:
+  - name: Install debian xmonad dependencies
+    when: "ansible_os_family == 'Debian'"
+    become: true
+    apt:
+      name:
+        - haskell-stack
+        - libx11-dev
+        - libxft-dev
+        - libxinerama-dev
+        - libxrandr-dev
+        - libxss-dev
+
+
+  - name: Install Arch xmonad dependencies
+    when: "ansible_os_family == 'Archlinux'"
+    become: true
+    pacman:
+      name:
+        - xorg-server
+        - xorg-apps
+        - xorg-xinit
+        - xorg-xmessage
+        - libx11
+        - libxft
+        - libxinerama
+        - libxrandr
+        - libxss
+        - stack
+
+  - name: Install stack for other distrubutions
+    when: (ansible_facts['os_family'] != "Debian") and (ansible_facts['os_family'] != "Archlinux" )
+    shell: curl -sSL https://get.haskellstack.org/ | sh
+
+  tags:
+    - install
+    - xmonad
+
+- name: Clone repositories
+  block:
+  - name: get latest xmonad tag
+    shell: |
+      git ls-remote --tags --refs  https://github.com/xmonad/xmonad | awk '{print $2}' | xargs -n1 basename | sort -V | tail -1
+    register: xmonad_tag
+
+  - name: get latest xmonad-contrib tag
+    shell: |
+      git ls-remote --tags --refs  https://github.com/xmonad/xmonad-contrib | awk '{print $2}' | xargs -n1 basename | sort -V | tail -1
+    register: xmonad_contrib_tag
+
+  - name: Clone xmonad
+    git:
+      repo: https://github.com/xmonad/xmonad
+      dest: ~/.config/xmonad/xmonad
+      version: "{{ xmonad_tag.stdout }}"
+
+  - name: Clone xmonad-contrib
+    git:
+      repo: https://github.com/xmonad/xmonad-contrib
+      dest: ~/.config/xmonad/xmonad-contrib
+      version: "{{ xmonad_contrib_tag.stdout }}"
+  tags:
+    - xmonad
+    - install
+
+- name: Install xmonad
+  block:
+  - name: Create .local/bin folders
+    file:
+      path: ~/.local/bin
+      state: directory
+
+  - name: Upgrade Stack project
+    shell: "stack upgrade"
+    args:
+      chdir: ~/.config/xmonad
+    environment:
+      PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
+
+  - name: Create Stack project
+    shell: "stack init --force"
+    args:
+      chdir: ~/.config/xmonad
+    environment:
+      PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
+  #
+  - name: Install Stack project
+    shell: "stack install"
+    args:
+      chdir: ~/.config/xmonad
+    environment:
+      PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
+  tags:
+    - xmonad
+    - install
+
+# TODO fix this task plz
+- name: Create xsession folder
+  become: true
+  file:
+    path: /usr/share/xsessions/
+    state: directory
+  tags:
+    - xmonad
+    - install
+
+- name: Create xsession file
+  become: true
+  shell: |
+    cat > /usr/share/xsessions/xmonad.desktop << EOF
+    [Desktop Entry]
+    Name=Xmonad
+    Type=Application
+    Exec=xmonad
+    EOF
+  tags:
+    - xmonad
+    - install

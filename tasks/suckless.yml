@@ -87,3 +87,17 @@
     chdir: "{{ suckless_home }}/dwm"
   tags:
     - dwm
+
+- name: Create xsessions file for dwm
+  become: true
+  shell: |
+    cat > /usr/share/xsessions/xmonad.desktop << EOF
+    [Desktop Entry]
+    Name=Dwm
+    Type=Application
+    Exec=dwm
+    EOF
+
+  tags:
+    - install
+    - dwm

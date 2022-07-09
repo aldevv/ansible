@@ -12,7 +12,7 @@
         - curl
 
   - name: Install yay
-    shell: "if [ ! -x $(command -v yay) ]; then; git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin; cd ~/yay-bin; yes | makepkg -si; rm -rf ~/yay-bin; fi"
+    shell: 'if [ ! -x "$(command -v yay)" ]; then git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin; cd ~/yay-bin; yes | makepkg -si; rm -rf ~/yay-bin; fi'
     ignore_errors: true
     no_log: true
 

@@ -27,6 +27,8 @@
         - st
         - dmenu
         - dwm
+        - xmonad
+        - copyq
 
     - role: base-devel
       tags:
@@ -39,6 +41,8 @@
         - st
         - dmenu
         - dwm
+        - xmonad
+        - copyq
 
     - role: core
       tags:
@@ -79,4 +83,14 @@
         - dmenu
         - dwm
         - core
+       
+    - include_tasks: tasks/xmonad.yml
+      tags:
+        - install
+        - xmonad
+       
+    - include_tasks: tasks/copyq.yml
+      tags:
+        - install
+        - copyq
        

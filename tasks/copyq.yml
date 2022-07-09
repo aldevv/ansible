@@ -1,0 +1,81 @@
+- name: Install copyq dependencies
+  block:
+    - name: Install Debian dependencies
+      when: ansible_os_family == "Debian"
+      become: true
+      apt:
+        name:
+          - build-essential
+          - cmake
+          - extra-cmake-modules
+          - git
+          - libkf5notifications-dev
+          - libqt5svg5
+          - libqt5svg5-dev
+          - libqt5waylandclient5-dev
+          - libqt5x11extras5-dev
+          - libwayland-dev
+          - libxfixes-dev
+          - libxtst-dev
+          - qtbase5-private-dev
+          - qtdeclarative5-dev
+          - qttools5-dev
+          - qttools5-dev-tools
+          - qtwayland5
+          - qtwayland5-dev-tools
+
+    - name: Install Arch dependencies
+      when: ansible_os_family == "Archlinux"
+      become: true
+      pacman:
+        name:
+          - cmake
+          - qt5-script
+          - qt5-tools
+          - qt5-svg
+          - qt5-x11extras
+          - libxtst
+          - extra-cmake-modules"\
+  tags:
+    - install
+    - copyq
+
+- name: Create directory
+  file:
+    path: ~/.local/build
+    state: directory
+  tags:
+    - install
+    - copyq
+
+- name: Clone copyq colemak
+  git:
+    repo: https://github.com/aldevv/copyq-colemak
+    dest: ~/.local/build/copyq
+  tags:
+    - install
+    - copyq
+
+- name: Build copyq
+  shell: if [ -f "~/.local/build/copyq/Makefile" ]; then cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local .; fi; make
+  args:
+    chdir: ~/.local/build/copyq
+  tags:
+    - install
+    - copyq
+
+- name: Get Build directory
+  shell: echo "{{ ansible_env.HOME }}/.local/build/copyq"
+  register: copyq_home
+  tags:
+    - install
+    - copyq
+
+- name: Install copyq
+  become: true
+  shell: make install
+  args:
+    chdir: "{{ copyq_home.stdout }}"
+  tags:
+    - install
+    - copyq
