@@ -37,6 +37,7 @@
     - install
     - xmonad
 
+
 - name: Clone repositories
   block:
   - name: get latest xmonad tag
@@ -117,3 +118,31 @@
   tags:
     - xmonad
     - install
+#
+- name: Install xmobar
+  block:
+  - name: Create directory
+    file:
+      path: ~/.local/build
+      state: directory
+
+  - name: Install xmobar
+    become: true
+    package:
+      name: 
+        - xmobar
+  # - name: Clone xmobar repo
+  #   git: 
+  #     repo: https://github.com/jaor/xmobar
+  #     dest: ~/.local/build/xmobar
+  #
+  # - name: Install Stack project xmobar
+  #   shell: "stack install --flag xmobar:all_extensions"
+  #   args:
+  #     chdir: ~/.local/build/xmobar
+  #   environment:
+  #     PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
+  tags:
+    - xmonad
+    - install
+

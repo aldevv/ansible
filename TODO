@@ -1,3 +1,39 @@
-remove /usr/local/bin/nvim symlink when building normal neovim
-remove ~/.local/build/neovim when building normal neovim
+add (/etc/default/keyboard file)
+# which is this
 
+XKBMODEL=pc105
+XKBLAYOUT=latam
+XKBVARIANT=colemak
+XKBOPTIONS=caps:escape
+BACKSPACE=guess
+
+
+add picom from source
+https://github.com/yshui/picom/releases/tag/v9.1
+
+
+2. add feh to debian deps
+
+install scdoc for swhkd
+git clone https://github/waycrate/swhkd
+make setup
+make
+make install
+
+#--
+install fzf in debian systems
+
+install the libgra library patch
+don't forget to run ldconfig after it ends to refresh the cache!!
+
+xmobar do
+sudo apt install libasound2-dev libxpm-dev
+cabal install xmobar --flags="all_extensions"
+apt-get install trayer xscreensaver autorandr pavucontrol dunst shellcheck
+apt-get install feh xfce4-power-manager
+
+xmonad
+can't stow stack.yaml so make sure you either generate it or, add this line
+system-ghc: true
+
+install xft_bgra

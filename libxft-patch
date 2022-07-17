@@ -1,0 +1,25 @@
+#!/bin/bash
+##https://www.reddit.com/r/suckless/comments/euwhff/libxft_add_support_for_bgra_glyphs_and_scaling/
+#declare -A req=(\
+#['eopkg']="
+#util-macros-devel
+#git
+#libxfont2-devel"
+#['apt']="
+#autoconf
+#autogen
+#libtool"\
+#)
+#install_ "${req[$PKG]}"
+
+# checked in  08/08/2021, no 2.3.4 patch for glyphs (use LD_LIBRARY_PATH)
+
+# you must checkout this version libxft 2.3.3 for patch to work
+git clone https://gitlab.freedesktop.org/xorg/lib/libxft.git $PROGRAMS/libxft
+cd libxft
+git checkout libXft-2.3.3
+wget -qO- 'https://gitlab.com/et-8/glarbs-deploy/-/raw/master/etc/portage/patches/x11-libs/libXft/libXft-bgra-commit-7808631e7a9a605d5fe7a1077129c658d9ec47fc.patch' | patch -p1
+./autogen.sh
+./configure --prefix=/usr/local --sysconfdir=/etc --disable-static
+make
+sudo make install
