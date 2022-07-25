@@ -117,11 +117,13 @@
     
     - name: Run PackerSync
       shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+      no_log: True
       ignore_errors: true
     
     
     - name: Run LspInstall
       shell: nvim --headless -c "LspInstall --sync pylsp" -c q 
+      no_log: True
       ignore_errors: true
   tags:
     - neovim
