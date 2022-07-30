@@ -1,5 +1,9 @@
 #!/bin/bash
 export CARGO_BUILD_HOME=aarch64-linux-android
+export ANSIBLE_LOCAL_TEMP=$HOME/.ansible/tmp
+export ANSIBLE_REMOTE_TEMP=$HOME/.ansible/tmp
 # missing ansible variables
 pkg install git tsu neovim rust python3
 pip install wheel ansible
+
+
