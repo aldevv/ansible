@@ -29,22 +29,35 @@
     - name: Install oh-my-zsh
       shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 
-    - name: give autossuggestions to zsh
-      git:
-         repo: "https://github.com/zsh-users/zsh-autosuggestions"
-         dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
-
-    - name: give highlightings to zsh
-      git:
-         repo: "https://github.com/zsh-users/zsh-syntax-highlighting"
-         dest: "~/.oh-my-zsh/plugins/zsh-syntax-highlighting"
-
-    - name: update our zshrc
-      shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc
+    
   tags:
     - install
     - core
     - zsh
+
+- name: Install Plugins
+  block:
+    - name: give autossuggestions to zsh
+      git:
+         repo: "https://github.com/zsh-users/zsh-autosuggestions"
+         dest: "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+
+    - name: give highlightings to zsh
+      git:
+         repo: "https://github.com/zsh-users/zsh-syntax-highlighting"
+         dest: "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+
+    - name: Check If stowed config
+      stat:
+        path: ~/.zshrc
+      register: p
+
+    - name: update our zshrc
+      when: p.stat.exists == True
+      shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc
+  tags:
+    - zsh
+    - zsh-plugins
 
 - name: Check If Custom Theme Available
   stat:

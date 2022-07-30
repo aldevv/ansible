@@ -67,6 +67,7 @@
         - core
         - install
         - zsh
+        - zsh-plugins
 
     - include_tasks: tasks/neovim.yml
       tags:

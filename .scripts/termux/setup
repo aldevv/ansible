@@ -1,0 +1,5 @@
+#!/bin/bash
+export CARGO_BUILD_HOME=aarch64-linux-android
+# missing ansible variables
+pkg install git tsu neovim rust python3
+pip install wheel ansible

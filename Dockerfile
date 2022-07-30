@@ -1,4 +1,4 @@
-FROM ubuntu:impish AS base
+FROM ubuntu:jammy AS base
 WORKDIR /usr/local/bin
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
