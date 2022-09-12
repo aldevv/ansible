@@ -40,9 +40,16 @@
     - install
     - copyq
 
+- name: Get Build directory
+  shell: echo "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
+  register: programs
+  tags:
+    - install
+    - copyq
+
 - name: Create directory
   file:
-    path: ~/.local/build
+    path: "{{ programs.stdout }}"
     state: directory
   tags:
     - install
@@ -51,31 +58,29 @@
 - name: Clone copyq colemak
   git:
     repo: https://github.com/aldevv/copyq-colemak
-    dest: ~/.local/build/copyq
+    dest: "{{ programs.stdout }}/copyq"
   tags:
     - install
     - copyq
 
 - name: Build copyq
-  shell: if [ -f "~/.local/build/copyq/Makefile" ]; then cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local .; fi; make
+  shell: |
+    if [ -f "{{ programs.stdout }}/copyq/Makefile" ]; then 
+      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local . ;
+    fi;
+    make;
   args:
-    chdir: ~/.local/build/copyq
+    chdir: "{{ programs.stdout }}/copyq"
   tags:
     - install
     - copyq
 
-- name: Get Build directory
-  shell: echo "{{ ansible_env.HOME }}/.local/build/copyq"
-  register: copyq_home
-  tags:
-    - install
-    - copyq
 
 - name: Install copyq
   become: true
   shell: make install
   args:
-    chdir: "{{ copyq_home.stdout }}"
+    chdir: "{{ programs.stdout }}/copyq"
   tags:
     - install
     - copyq

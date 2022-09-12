@@ -37,3 +37,7 @@ can't stow stack.yaml so make sure you either generate it or, add this line
 system-ghc: true
 
 install xft_bgra
+
+# dragon
+apt install libgtk-3-dev
+

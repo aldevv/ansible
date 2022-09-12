@@ -1,35 +1,42 @@
+- name:
+  stat:
+    path: "~/.ssh/id_rsa"
+  register: res
 
-- name: Ensure .ssh directory exists.
-  become: yes
-  file:
-    dest: "{{ dest_key | dirname }}"
-    state: directory
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: 0700
+- name: Install ssh
+  when: not res.stat.exists
+  block:
+    - name: Ensure .ssh directory exists.
+      become: yes
+      file:
+        dest: "{{ dest_key | dirname }}"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0700
 
-- name: Install ssh key
-  become: yes
-  copy:
-    content: "{{ id_rsa }}"
-    dest: "{{ dest_key }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: 0600
+    - name: Install ssh key
+      become: yes
+      copy:
+        content: "{{ id_rsa }}"
+        dest: "{{ dest_key }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0600
 
-- name: Install pub ssh key
-  become: yes
-  copy:
-    content: "{{ id_rsa_pub }}"
-    dest: "{{ dest_pub_key }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: 0644
+    - name: Install pub ssh key
+      become: yes
+      copy:
+        content: "{{ id_rsa_pub }}"
+        dest: "{{ dest_pub_key }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
 
-- name: Set authorized key took from file
-  authorized_key:
-    user: "{{ user }}"
-    state: present
-    key: "{{ lookup('file', item) }}"
-  with_fileglob:
-    - /home/{{ user }}/.ssh/*.pub
+    - name: Set authorized key took from file
+      authorized_key:
+        user: "{{ user }}"
+        state: present
+        key: "{{ lookup('file', item) }}"
+      with_fileglob:
+        - /home/{{ user }}/.ssh/*.pub

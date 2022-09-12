@@ -54,6 +54,39 @@
    - neovim-nightly
    - install
 
+- name: Install neovim-nightly build deps debian
+  when: ansible_os_family == 'Debian'
+  apt:
+    name:
+      - ninja-build
+      - gettext
+      - libtool
+      - libtool-bin
+      - autoconf
+      - automake
+      - cmake
+      - g++
+      - pkg-config
+      - unzip
+      - curl
+      - doxygen
+  tags:
+    - neovim-nightly
+
+- name: Install neovim-nightly build deps arch
+  when: ansible_os_family == 'Archlinux'
+  apt:
+    name:
+      - base-devel
+      - cmake
+      - unzip
+      - ninja
+      - tree-sitter
+      - curl
+  tags:
+    - neovim-nightly
+
+
 - name: Install neovim nightly
   block:
     - name: Clone Neovim nightly
@@ -63,8 +96,7 @@
         depth: 1
     
     - name: Build neovim nightly
-      become: true
-      shell: "make clean && make -j 20"
+      shell: "make clean && make CMAKE_BUILD_TYPE=Release"
       args:
         chdir: "{{ nvim_nightly_home }}-nightly"
     

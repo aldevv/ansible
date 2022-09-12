@@ -1,13 +1,22 @@
 - hosts: localhost
 
+  # tested: debian
+  # - neovim / neovim-nightly
+  # - copyq
+
+  # to_test:
+  # - picom
+
   vars:
     user: "{{ lookup('pipe', 'whoami') }}"
     # dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
     dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
     dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
-    nvim_nightly_home: "{{ ansible_env.HOME }}/.local/build/neovim"
-    nvim_home: "{{ ansible_env.HOME }}/.local/programs/neovim"
-    suckless_home: "{{ ansible_env.HOME }}/.local/programs/suckless"
+    nvim_nightly_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
+    nvim_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
+    suckless_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/suckless"
+    # this one works but looks worse
+    # suckless_home: "{{ lookup('env', 'PROGRAMS', default=ansible_env.HOME ~ '/programs') }}/suckless"
 
   roles:
     - role: auth
@@ -15,6 +24,7 @@
         - dotfiles-full 
         - install
         - ssh
+        - wiki
 
     - role: update
       tags:
@@ -95,3 +105,7 @@
         - install
         - copyq
        
+    - include_tasks: tasks/wiki.yml
+      tags:
+        - install
+        - wiki
