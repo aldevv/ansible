@@ -14,7 +14,7 @@
     - neovim
 
 - name: Create bujo folder
-  shell: mkdir -p ~/.cache/bujo ~/.local/build
+  shell: "mkdir -p ~/.cache/bujo {{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
   tags:
     - install
     - neovim
@@ -87,30 +87,39 @@
     - neovim-nightly
 
 
+
 - name: Install neovim nightly
   block:
+    - name: Create neovim home variable  
+      shell: echo "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
+      register: nvim_home
+
     - name: Clone Neovim nightly
       git:
         repo: 'https://github.com/neovim/neovim.git'
-        dest: "{{ nvim_nightly_home }}-nightly"
+        dest: "{{ nvim_home.stdout }}-nightly"
         depth: 1
     
     - name: Build neovim nightly
       shell: "make clean && make CMAKE_BUILD_TYPE=Release"
       args:
-        chdir: "{{ nvim_nightly_home }}-nightly"
+        chdir: "{{ nvim_home.stdout }}-nightly"
     
     - name: Install neovim nightly
       become: true
       shell: "make install"
       args:
-        chdir: "{{ nvim_nightly_home }}-nightly"
+        chdir: "{{ nvim_home.stdout }}-nightly"
   tags:
     - neovim-nightly
 
 
 - name: Install neovim stable
   block:
+    - name: Create neovim home variable  
+      shell: echo "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
+      register: nvim_home
+
     - name: Get latest neovim tag
       community.general.github_release:
         user: 'neovim'
@@ -125,12 +134,12 @@
         remote_src: true
 
     - name: Rename neovim folder
-      shell: "[ -d {{ nvim_home }} ] && rm -r {{ nvim_home }}; mv {{ ansible_env.HOME }}/.local/programs/nvim-linux64 {{ nvim_home }}"
+      shell: "[ -d {{ nvim_home.stdout }} ] && rm -r {{ nvim_home.stdout }}; mv {{ ansible_env.HOME }}/.local/programs/nvim-linux64 {{ nvim_home.stdout }}"
 
     - name: Symlink neovim binary
       become: true
       file:
-        src: "{{ nvim_home }}/bin/nvim"
+        src: "{{ nvim_home.stdout }}/bin/nvim"
         dest: /usr/local/bin/nvim
         state: link
         force: true

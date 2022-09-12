@@ -12,8 +12,6 @@
     # dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
     dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
     dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
-    nvim_nightly_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
-    nvim_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
     suckless_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/suckless"
     # this one works but looks worse
     # suckless_home: "{{ lookup('env', 'PROGRAMS', default=ansible_env.HOME ~ '/programs') }}/suckless"
