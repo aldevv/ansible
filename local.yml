@@ -3,8 +3,13 @@
   # tested: debian
   # - neovim / neovim-nightly
   # - copyq
+  # - dotfiles
+  # - zsh
+  # - xmonad
 
   # to_test:
+
+  # to_create:
   # - picom
 
   vars:
