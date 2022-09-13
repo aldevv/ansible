@@ -4,7 +4,6 @@ RUN pacman --noconfirm -Sy archlinux-keyring
 RUN pacman --noconfirm -Sy ansible git make cmake sudo
 
 FROM base as kanon
-ARG TAGS
 ENV USER=kanon
 RUN groupadd --gid 1000 ${USER} \
     && useradd --uid 1000 --gid 1000 -p "" ${USER} \
@@ -18,5 +17,7 @@ USER ${USER}
 WORKDIR /home/${USER}/ansible
 
 FROM kanon
+ARG TAGS
+ENV TAGS "${TAGS:-t 'dotfiles,neovim,copyq' -K}"
 COPY . .
 CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]

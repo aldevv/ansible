@@ -11,7 +11,6 @@ RUN apt-get update && \
     apt-get autoremove --yes
 
 FROM base AS kanon
-ARG TAGS
 ENV USER=kanon
 RUN addgroup --gid 1000 ${USER} \
     && adduser --gecos ${USER} --uid 1000 --gid 1000 --disabled-password ${USER} \
@@ -24,4 +23,6 @@ WORKDIR /home/${USER}/ansible
 
 FROM kanon
 COPY . .
+ARG TAGS
+ENV TAGS "${TAGS:-t 'dotfiles,neovim,copyq' -K}"
 CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
