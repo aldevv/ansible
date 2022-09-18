@@ -1,0 +1,9 @@
+- name: Clone wiki
+  git:
+    repo: git@github.com:aldevv/wiki.git
+    dest: ~/.local/share/wiki
+    depth: 1
+    accept_hostkey: true
+  tags:
+    - wiki
+    - install

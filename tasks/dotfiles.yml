@@ -1,3 +1,19 @@
+  - name: Define dotfiles directory variable
+    shell: echo "https://github.com/aldevv/.dotfiles.git"
+    register: dotfiles_repo
+    tags:
+      - neovim
+      - neovim-nightly
+      - dotfiles
+
+  - name: Define dotfiles directory variable
+    shell: echo "git@github.com:aldevv/.dotfiles.git"
+    register: dotfiles_repo_full
+    tags:
+      - dotfiles-full
+      - install
+
+  
   - name: Install Dotfiles Dependencies
     become: true
     package:
@@ -12,23 +28,29 @@
       - dotfiles-full
     when: "ansible_facts['os_family'] != 'RedHat'"
 
+  
   - name: Install Git-Secret
     when: "ansible_facts['os_family'] != 'Archlinux'"
     block:
+
+      - name: Create directory variable
+        shell: echo "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
+        register: gitsecret_home
+
       - name: Clone Git-Secret
         git:
           repo: "https://github.com/sobolevn/git-secret.git"
-          dest: "~/.local/build/git-secret"
+          dest: "{{ gitsecret_home.stdout }}/git-secret"
 
       - name: Build Git-Secret
         make:
-          chdir: "~/.local/build/git-secret"
+          chdir: "{{ gitsecret_home.stdout }}/git-secret"
           target: build
 
       - name: Install Git-Secret
         become: true
         make:
-          chdir: "/home/{{ user }}/.local/build/git-secret"
+          chdir: "{{ gitsecret_home.stdout }}/git-secret"
           target: install
           params: PREFIX="/usr/local"
     tags:
@@ -47,10 +69,12 @@
       - dotfiles
       - dotfiles-full
 
+  
+
 
   - name: Download repo
     git:
-       repo: "{{ dotfiles_repo }}"
+       repo: "{{ dotfiles_repo.stdout }}"
        dest: "~/.dotfiles"
        recursive: no
     tags:
@@ -61,7 +85,7 @@
 
   - name: Download repo full
     git:
-       repo: "{{ dotfiles_repo_full }}"
+       repo: "{{ dotfiles_repo_full.stdout }}"
        dest: "~/.dotfiles"
        recursive: true
        accept_hostkey: true
