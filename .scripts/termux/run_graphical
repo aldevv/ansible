@@ -1,0 +1,5 @@
+#!/bin/bash
+export XDG_RUNTIME_DIR=${TMPDIR}
+termux-x11 :1 &
+#env DISPLAY=:1 xfce4-session
+env DISPLAY=:1 proot-distro login archlinx
