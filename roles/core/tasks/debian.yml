@@ -92,6 +92,12 @@
       - "fd-find"
       - "exa"
       - "alacritty"
+      - "wmctrl"
+      - "tidy"
+      - "luarocks"
+      - "chafa"
+      - "direnv"
+      - "ctags"
 
 
 - name: Install misc programs
@@ -110,6 +116,8 @@
   tags:
     - install
     - rust
+
+- import_tasks: ./custom/python.yml
 
 
 - name: Install development programs

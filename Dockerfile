@@ -20,9 +20,11 @@ RUN addgroup --gid 1000 ${USER} \
 USER kanon
 RUN mkdir /home/${USER}/ansible
 WORKDIR /home/${USER}/ansible
-
-FROM kanon
 COPY . .
+
+FROM kanon as final
 ARG TAGS
-ENV TAGS "${TAGS:-t 'dotfiles,neovim,copyq' -K}"
+ENV TAGS "${TAGS:--t 'dotfiles,neovim,zsh,zsh_plugins' -K}"
+
 CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
+

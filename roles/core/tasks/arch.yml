@@ -38,6 +38,8 @@
         - unzip
         - bitwarden
         - bitwarden-cli
+        - jq
+        - chafa
 
   - name: Install misc programs
     become: true

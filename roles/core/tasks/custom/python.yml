@@ -1,0 +1,10 @@
+- name: Install pynvim
+  pip:
+    name: 
+      - pynvim
+      - ranger-fm
+      - ueberzug
+      - yq
+      - jc
+      - jq
+      - brotab
