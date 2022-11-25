@@ -12,6 +12,17 @@
         - libxrandr-dev
         - libxss-dev
 
+# TODO: add this for archlinux
+- name: Install xmobar dependencies
+  block:
+  - name: Install debian xmonad dependencies
+    when: "ansible_os_family == 'Debian'"
+    become: true
+    apt:
+      name:
+        - libasound2-dev
+        - libxpm-dev
+
 
   - name: Install Arch xmonad dependencies
     when: "ansible_os_family == 'Archlinux'"

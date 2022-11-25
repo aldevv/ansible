@@ -1,0 +1,133 @@
+- hosts: localhost
+
+  tasks:
+    - name: Check github-cli key
+      stat:
+        path: /usr/share/keyrings/githubcli-archive-keyring.gpg
+      register: gh
+
+    - name: check microsoft key
+      stat:
+        path: /etc/apt/sources.list.d/packages_microsoft_com_repos_code.list
+      register: mic
+
+    - name: check microsoft key 2
+      stat:
+        path: /etc/apt/sources.list.d/vscode.list
+      register: mic2
+
+    # - name: Add alacritty repository
+    #   when: alacritty_exists is failed
+      # become: true
+      # shell: add-apt-repository -y ppa:mmstick76/alacritty
+
+    - name: Add github-cli key
+      become: true
+      shell: curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+      when: gh.stat.exists == False
+
+    - name: Add microsoft key
+      become: true
+      shell: |
+        curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/packages.microsoft.gpg > packages.microsoft.gpg
+        install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+      when: mic.stat.exists == False and mic2.stat.exists == False
+
+      # hardcoded amd64
+    - name: Add github-cli repo
+      become: true
+      apt_repository:
+        repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main'
+        state: present
+      when: gh.stat.exists == False
+
+    - name: Add microsoft repo
+      become: true
+      apt_repository:
+        repo: 'deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main'
+        state: present
+      when: mic.stat.exists == False and mic2.stat.exists == False
+
+    - name: remove microsoft key
+      shell: rm -f packages.microsoft.gpg
+        
+    - name: Update cache
+      become: true
+      apt:
+        force_apt_get: true
+        update_cache: true
+        state: present
+
+    - name: Install core programs
+      become: true
+      apt:
+        name:
+          - "fonts-noto-color-emoji"
+          - "build-essential"
+          - "cmake"
+          - "flatpak"
+          - "npm"
+          - "rclone"
+          - "autorandr"
+          - "picom"
+          - "sxhkd"
+          - "dunst"
+          - "sxiv"
+          - "pavucontrol"
+          - "firefox"
+          - "zathura"
+          - "zathura-pdf-poppler"
+          - "xsel"
+          - "xclip"
+          - "fcitx"
+          - "fcitx-frontend-qt5"
+          - "kde-config-fcitx"
+          - "fcitx-mozc"
+          - "fzf"
+          - "tldr"
+          - "pipenv"
+          - "pass"
+          - "tmux"
+          - "chromium-browser"
+          - "unzip"
+          - "flameshot"
+          - "ripgrep"
+          - "fd-find"
+          - "exa"
+          - "alacritty"
+          - "wmctrl"
+          - "tidy"
+          - "luarocks"
+          - "chafa"
+          - "direnv"
+          - "ctags"
+
+
+    - name: Install misc programs
+      become: true
+      apt:
+        name:
+          - gh
+          - docker.io
+          - docker-compose
+          - exuberant-ctags
+          - rsync
+          - shellcheck
+
+    - name: Install development programs
+      become: true
+      apt:
+        name:
+            - firefox
+      tags:
+        - core
+        - develop
+
+
+    - name: Install qmk programs for custom keyboard
+      become: true
+      apt:
+        name:
+          - "avr-libc"
+          - "gcc-avr"
+          - "avrdude"

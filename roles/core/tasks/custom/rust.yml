@@ -73,4 +73,3 @@
 
 - name: Install bat
   shell: cargo install --locked bat
-

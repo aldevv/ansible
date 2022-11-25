@@ -3,7 +3,7 @@
     name: 
       - pynvim
       - ranger-fm
-      - ueberzug
+      # - ueberzug no longer maintained
       - yq
       - jc
       - jq

@@ -1,0 +1,1 @@
+docker run -it --name=tester dot ansible-playbook -t 'dotfiles,neovim,zsh,zsh_plugins,core' -K local.yml

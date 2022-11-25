@@ -25,6 +25,7 @@ COPY . .
 FROM kanon as final
 ARG TAGS
 ENV TAGS "${TAGS:--t 'dotfiles,neovim,zsh,zsh_plugins' -K}"
+# ENV TAGS "${TAGS:--t 'dotfiles,neovim,zsh,zsh_plugins,core' -K}"
 
 CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
 
