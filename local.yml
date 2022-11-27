@@ -45,6 +45,7 @@
         - dwm
         - xmonad
         - copyq
+        - dunst
 
     - role: base-devel
       tags:
@@ -115,3 +116,9 @@
       tags:
         - install
         - wiki
+
+    - import_tasks: tasks/dunst.yml
+      tags:
+      - install
+      - core
+      - dunst
