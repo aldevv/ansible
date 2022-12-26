@@ -1,0 +1,36 @@
+- name: install dwm
+  block:
+  - name: "Clone dwm repo"
+    git:
+      repo: "https://github.com/aldevv/dwm-flexipatch"
+      dest: "{{ programs }}/dwm"
+
+  - name: make dwm
+    make: 
+      chdir: "{{ programs }}/dwm"
+
+  - name: install dwm
+    become: true
+    make:
+      chdir: "{{ programs }}/dwm"
+      target: install
+  tags:
+    - install
+    - suckless
+    - dwm
+
+- name: Create xsessions file for dwm
+  become: true
+  shell: |
+    mkdir -p /usr/share/xsessions/
+    cat > /usr/share/xsessions/xmonad.desktop << EOF
+    [Desktop Entry]
+    Name=Dwm
+    Type=Application
+    Exec=dwm
+    EOF
+
+  tags:
+    - install
+    - suckless
+    - dwm

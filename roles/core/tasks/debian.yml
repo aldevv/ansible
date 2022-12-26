@@ -41,6 +41,7 @@
   when: mic.stat.exists == False and mic2.stat.exists == False
 
 - name: key cleanup 
+  become: true
   shell: rm -f packages.microsoft.gpg
 
 - name: Update cache

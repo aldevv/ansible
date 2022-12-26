@@ -1,0 +1,10 @@
+- name: Install latest node
+  become: true
+  shell: |
+    node_version=19
+    if [[ -z $(command -v node) || "$(echo ${$(node --version):1:2})" -lt $node_version ]]; then
+      curl -fsSL https://deb.nodesource.com/setup_$node_version.x | bash -
+      apt install -y nodejs
+    fi
+  args:
+    executable: /bin/bash

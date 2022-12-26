@@ -3,21 +3,21 @@
   apt:
     name:
       - build-essential
-      # - cmake
-      # - pkg-config
-      # - automake
-      # - libtool
-      # - unzip
-      # - ninja-build
-      # - gettext
-      # - libtool
-      # - libtool-bin
-      # - autoconf
-      # - g++
-      # - curl
-      # - doxygen
-      # - npm
-      # - python3-venv
-      # - python3-pip
+      - cmake
+      - pkg-config
+      - automake
+      - libtool
+      - unzip
+      - ninja-build
+      - gettext
+      - libtool
+      - libtool-bin
+      - autoconf
+      - g++
+      - curl
+      - doxygen
+      - npm
+      - python3-venv
+      - python3-pip
       - gpg
       - wget

@@ -54,9 +54,9 @@
           target: install
           params: PREFIX="/usr/local"
     tags:
+      - install
       - dotfiles
       - dotfiles-full
-      - install
 
   - name: Check repo is cloned
     stat:
@@ -90,8 +90,8 @@
        recursive: true
        accept_hostkey: true
     tags:
-      - dotfiles-full
       - install
+      - dotfiles-full
     when: r.stat.exists == False
 
   - name: make scripts executable
@@ -102,9 +102,9 @@
       - "linux"
       - "install"
     tags:
+      - install
       - dotfiles
       - dotfiles-full
-      - install
 
   - name: Stow folders
     shell: ./linux

@@ -22,6 +22,7 @@
 
 - name: Install neovim dependencies
   block:
+
     - name: Install Arch deps
       when: ansible_os_family == 'Archlinux'
       become: true
@@ -35,9 +36,11 @@
       become: true
       apt: 
         name:
+          - curl
           - ripgrep
           - fd-find
     
+
     - name: Install pynvim
       pip:
         name: 

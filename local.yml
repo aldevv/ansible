@@ -18,6 +18,7 @@
     dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
     dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
     suckless_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/suckless"
+    programs: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
     # this one works but looks worse
     # suckless_home: "{{ lookup('env', 'PROGRAMS', default=ansible_env.HOME ~ '/programs') }}/suckless"
 
@@ -66,6 +67,14 @@
         - install
         - core
 
+    - role: suckless
+      tags:
+        - install
+        - suckless
+        - dwm
+        - dmenu
+        - st
+
 
   tasks:
   # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
@@ -73,6 +82,7 @@
     
     - include_tasks: tasks/dotfiles.yml
       tags:
+        - install
         - neovim
         - neovim-nightly
         - dotfiles
@@ -99,13 +109,13 @@
         - suckless
         - st
         - dmenu
-        - dwm
+        # - dwm
         - core
        
-    - include_tasks: tasks/xmonad.yml
-      tags:
-        - install
-        - xmonad
+    # - include_tasks: tasks/xmonad.yml
+    #   tags:
+        # - install
+        # - xmonad
        
     - include_tasks: tasks/copyq.yml
       tags:
@@ -122,3 +132,9 @@
       - install
       - core
       - dunst
+
+    - import_tasks: tasks/build/dwm.yml
+      tags:
+      - install
+      - suckless
+      - dwm
