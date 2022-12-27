@@ -1,6 +1,6 @@
 - name: Install copyq dependencies
   block:
-    - name: Install Debian dependencies
+    - name: Install Debian dependencies to install copyq
       when: ansible_os_family == "Debian"
       become: true
       apt:
@@ -40,16 +40,9 @@
     - install
     - copyq
 
-- name: Get Build directory
-  shell: echo "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
-  register: programs
-  tags:
-    - install
-    - copyq
-
 - name: Create directory
   file:
-    path: "{{ programs.stdout }}"
+    path: "{{ programs }}"
     state: directory
   tags:
     - install
@@ -58,29 +51,35 @@
 - name: Clone copyq colemak
   git:
     repo: https://github.com/aldevv/copyq-colemak
-    dest: "{{ programs.stdout }}/copyq"
+    dest: "{{ programs }}/copyq"
   tags:
     - install
     - copyq
 
 - name: Build copyq
   shell: |
-    if [ -f "{{ programs.stdout }}/copyq/Makefile" ]; then 
+    if [[ ! -f Makefile ]]; then
       cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local . ;
-    fi;
-    make;
+    fi
   args:
-    chdir: "{{ programs.stdout }}/copyq"
+    chdir: "{{ programs }}/copyq"
   tags:
     - install
     - copyq
 
+- name: Make copyq
+  make: 
+    target: .
+    chdir: "{{ programs }}/copyq"
+  tags:
+    - install
+    - copyq
 
 - name: Install copyq
   become: true
-  shell: make install
-  args:
-    chdir: "{{ programs.stdout }}/copyq"
+  make: 
+    target: install
+    chdir: "{{ programs }}/copyq"
   tags:
     - install
     - copyq

@@ -1,9 +1,15 @@
+- name: "Clone dwm repo no ssh"
+  git:
+    repo: "https://github.com/aldevv/dwm-flexipatch"
+    dest: "{{ programs }}/dwm"
+    force: true
+  tags:
+    - install
+    - suckless
+    - dwm
+
 - name: install dwm
   block:
-  - name: "Clone dwm repo"
-    git:
-      repo: "https://github.com/aldevv/dwm-flexipatch"
-      dest: "{{ programs }}/dwm"
 
   - name: make dwm
     make: 
