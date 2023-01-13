@@ -2,7 +2,6 @@
 
   # tested: debian
   # - neovim / neovim-nightly
-  # - copyq
   # - dotfiles
   # - zsh
   # - xmonad
@@ -45,7 +44,6 @@
         - dmenu
         - dwm
         - xmonad
-        - copyq
         - dunst
 
     - role: base-devel
@@ -60,7 +58,6 @@
         - dmenu
         - dwm
         - xmonad
-        - copyq
 
     - role: core
       tags:
@@ -116,11 +113,6 @@
     #   tags:
         # - install
         # - xmonad
-       
-    - include_tasks: tasks/copyq.yml
-      tags:
-        - install
-        - copyq
        
     - include_tasks: tasks/wiki.yml
       tags:

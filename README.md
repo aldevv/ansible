@@ -18,20 +18,35 @@ BACKSPACE=guess
 add picom from source
 https://github.com/yshui/picom/releases/tag/v9.1
 
-#--
 
 install the libgra library patch
 don't forget to run ldconfig after it ends to refresh the cache!!
+dependencies for libgra: 
+                        - xutils-dev
 
-xmobar do
-sudo apt install libasound2-dev libxpm-dev
-cabal install xmobar --flags="all_extensions"
-apt-get install trayer xscreensaver autorandr pavucontrol dunst shellcheck
-apt-get install feh xfce4-power-manager
+# use this guide
+https://www.maximilian-schillinger.de/articles/st-libxft-bgra-patch.html
+# usar ldconfig solo cuando se alla añadido el library path (donde esta el nuevo archivo .so)
+# en un nuevo archivo en /etc/ld.so.conf/mylibs.conf
 
-xmonad
-can't stow stack.yaml so make sure you either generate it or, add this line
-system-ghc: true
+# luego usar ldconfig
+# crear de nuevo st con
+# make
+# make install
+# revisar que se alla usado el correcto en (/usr/lib), utilizando ldd st
+# en caso de no querer cambiar el libxft para todos los programas, se puede
+# modificar el config.mk de st para que busque la libreria en un path personalizado
+# la libreria patcheada
 
 install xft_bgra
+
+
+# add dwm.desktop
+# add stow init so it adds .xprofile
+# do sudoers file thing
+# create playground
+# create playground/code
+# create learn
+# create projects
+# create work
 

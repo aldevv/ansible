@@ -94,6 +94,9 @@
       - "direnv"
       - "exuberant-ctags"
       - "feh"
+      - "simplescreenrecorder"
+      - "git-extras"
+      - "lynx"
 
 
 

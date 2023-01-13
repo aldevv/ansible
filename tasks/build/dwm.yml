@@ -29,7 +29,7 @@
   become: true
   shell: |
     mkdir -p /usr/share/xsessions/
-    cat > /usr/share/xsessions/xmonad.desktop << EOF
+    cat > /usr/share/xsessions/dwm.desktop << EOF
     [Desktop Entry]
     Name=Dwm
     Type=Application

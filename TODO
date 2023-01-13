@@ -25,6 +25,7 @@ install fzf in debian systems
 
 install the libgra library patch
 don't forget to run ldconfig after it ends to refresh the cache!!
+https://raw.githubusercontent.com/codePassion-dot/dotfiles-1/736f0912b051bc2b2972594ddbb321dcc55f697c/.local/share/myScripts/os/solus/build/main/libxft-libgra-debian
 
 xmobar do
 sudo apt install libasound2-dev libxpm-dev
