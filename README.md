@@ -49,4 +49,4 @@ install xft_bgra
 # create learn
 # create projects
 # create work
-
+# add backlight logic (create the xorg.conf file, look at your wiki)
