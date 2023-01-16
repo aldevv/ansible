@@ -99,8 +99,7 @@
       - "imagemagick"
       - "xdotool"
       - "xbacklight"
-
-
+      - "git-extras"
 
 - name: Install misc programs
   become: true
@@ -113,20 +112,12 @@
       - rsync
       - shellcheck
 
-- name: Install dragon dependencies 
-  become: true
-  apt:
-    name:
-      - libgtk-3-dev
-
-
 - import_tasks: ./custom/rust.yml
   tags:
     - install
     - rust
 
 - import_tasks: ./custom/python.yml
-
 
 - name: Install development programs
   become: true
@@ -136,7 +127,6 @@
   tags:
     - core
     - develop
-
 
 - name: Install qmk programs for custom keyboard
   become: true

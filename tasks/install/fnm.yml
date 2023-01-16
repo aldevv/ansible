@@ -8,10 +8,20 @@
     - fnm
 
 - name: Install fnm
+  become: yes
+  apt:
+    name: unzip
+  tags:
+    - install
+    - fnm
+
+
+- name: Install fnm
   shell: |
+    export SHELL=$(which zsh)
     curl -fsSL https://fnm.vercel.app/install | zsh
   args:
-    executable: /bin/zsh
+    executable: /bin/bash
   tags:
     - install
     - fnm

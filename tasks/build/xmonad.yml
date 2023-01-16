@@ -1,15 +1,10 @@
-- name: install dependencies
+- name: install xmonad dependencies
   block:
   - include_role:
       name: update
   - include_role:
       name: base-devel
-  tags:
-    - xmonad
-    - xmobar
 
-- name: Install dependencies
-  block:
   - name: Install debian xmonad dependencies
     when: "ansible_os_family == 'Debian'"
     become: true
@@ -21,18 +16,8 @@
         - libxinerama-dev
         - libxrandr-dev
         - libxss-dev
-
-# TODO: add this for archlinux
-- name: Install xmobar dependencies
-  block:
-  - name: Install debian xmonad dependencies
-    when: "ansible_os_family == 'Debian'"
-    become: true
-    apt:
-      name:
         - libasound2-dev
         - libxpm-dev
-
 
   - name: Install Arch xmonad dependencies
     when: "ansible_os_family == 'Archlinux'"
@@ -53,11 +38,9 @@
   - name: Install stack for other distrubutions
     when: (ansible_facts['os_family'] != "Debian") and (ansible_facts['os_family'] != "Archlinux" )
     shell: curl -sSL https://get.haskellstack.org/ | sh
-
   tags:
-    - install
     - xmonad
-
+    - xmobar
 
 - name: Clone repositories
   block:
@@ -147,12 +130,6 @@
       path: ~/.local/build
       state: directory
 
-  # - name: Install xmobar
-  #   become: true
-  #   package:
-  #     name: 
-  #       - xmobar
-
   - name: Clone xmobar repo
     git: 
       repo: https://github.com/jaor/xmobar
@@ -165,6 +142,7 @@
     environment:
       PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
   tags:
-    - xmonad
     - install
+    - xmonad
+    - xmobar
 

@@ -3,14 +3,13 @@
     user: "{{ lookup('pipe', 'whoami') }}"
     dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
     dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
-    suckless_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/suckless"
+    programs: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
     work: "{{ lookup('env', 'WORK') or ansible_env.HOME ~ '/work' }}"
     projects: "{{ lookup('env', 'PROJECTS') or ansible_env.HOME ~ '/projects' }}"
     learn: "{{ lookup('env', 'LEARN') or ansible_env.HOME ~ '/learn' }}"
     playground: "{{ lookup('env', 'PLAYGROUND') or ansible_env.HOME ~ '/playground' }}"
     code: "{{ lookup('env', 'CODE') or ansible_env.HOME ~ '/playground/code' }}"
-    # this one works but looks worse
-    # suckless_home: "{{ lookup('env', 'PROGRAMS', default=ansible_env.HOME ~ '/programs') }}/suckless"
+    suckless_home: "{{ programs }}/suckless"
 
   roles:
     - role: auth
@@ -40,8 +39,8 @@
     - include: tasks/build/neovim.yml
     - include: tasks/build/suckless.yml
     - include: tasks/wiki.yml
-    - include: tasks/build/dunst.yml
-    - include: tasks/install/fnm.yml
     - include: tasks/folders.yml
     - include: tasks/sudoers.yml
     - include: tasks/hardware.yml
+    - include: tasks/build/dunst.yml
+    - include: tasks/install/fnm.yml

@@ -1,46 +1,9 @@
-- name: install dependencies neovim
+- name: install neovim dependencies 
   block:
     - include_role:
         name: update
     - include_role:
         name: base-devel
-  tags:
-    - install
-    - neovim
-    - neovim-nightly
-
-- name: Stow nvim dotfile
-  shell: stow nvim && cd -
-  args:
-    chdir: "{{ ansible_env.HOME }}/.dotfiles"
-  tags:
-    - install
-    - neovim
-    - neovim-nightly
-
-- name: Create programs folder
-  shell: mkdir -p ~/.local/programs
-  tags:
-    - install
-    - neovim
-
-- name: Create bujo folder
-  shell: "mkdir -p ~/.cache/bujo {{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
-  tags:
-    - install
-    - neovim
-    - neovim-nightly
-
-- name: Install neovim dependencies
-  block:
-
-    - name: Install Arch deps
-      when: ansible_os_family == 'Archlinux'
-      become: true
-      pacman: 
-        name:
-          - ripgrep
-          - fd
 
     - name: Install Debian deps
       when: ansible_os_family == 'Debian'
@@ -51,6 +14,13 @@
           - ripgrep
           - fd-find
     
+    - name: Install Arch deps
+      when: ansible_os_family == 'Archlinux'
+      become: true
+      pacman: 
+        name:
+          - ripgrep
+          - fd
 
     - name: Install pynvim
       pip:
@@ -63,51 +33,71 @@
       npm:
         name: neovim
         global: yes
-  tags:
-   - neovim
-   - neovim-nightly
-   - install
 
-- name: Install neovim-nightly build deps debian
-  when: ansible_os_family == 'Debian'
-  apt:
-    name:
-      - ninja-build
-      - gettext
-      - libtool
-      - libtool-bin
-      - autoconf
-      - automake
-      - cmake
-      - g++
-      - pkg-config
-      - unzip
-      - curl
-      - doxygen
+    - name: Install neovim-nightly build deps debian
+      when: ansible_os_family == 'Debian'
+      apt:
+        name:
+          - ninja-build
+          - gettext
+          - libtool
+          - libtool-bin
+          - autoconf
+          - automake
+          - cmake
+          - g++
+          - pkg-config
+          - unzip
+          - curl
+          - doxygen
+      tags:
+        - neovim-nightly
+
+    - name: Install neovim-nightly build deps arch
+      when: ansible_os_family == 'Archlinux'
+      apt:
+        name:
+          - base-devel
+          - cmake
+          - unzip
+          - ninja
+          - tree-sitter
+          - curl
+      tags:
+        - neovim-nightly
   tags:
+    - install
+    - neovim
     - neovim-nightly
 
-- name: Install neovim-nightly build deps arch
-  when: ansible_os_family == 'Archlinux'
-  apt:
-    name:
-      - base-devel
-      - cmake
-      - unzip
-      - ninja
-      - tree-sitter
-      - curl
+
+- name: Stow nvim dotfile
+  shell: stow nvim && cd -
+  args:
+    chdir: "{{ ansible_env.HOME }}/.dotfiles"
   tags:
+    - install
+    - neovim
+    - neovim-nightly
+
+- name: Create bujo folder
+  shell: "mkdir -p ~/.cache/bujo {{ programs }}"
+  tags:
+    - install
+    - neovim
     - neovim-nightly
 
 
+- name: Create neovim home variable  
+  shell: echo "{{ programs }}/neovim"
+  register: nvim_home
+  tags:
+    - install
+    - neovim
+    - neovim-nightly
 
 - name: Install neovim nightly
   block:
-    - name: Create neovim home variable  
-      shell: echo "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
-      register: nvim_home
-
     - name: Clone Neovim nightly
       git:
         repo: 'https://github.com/neovim/neovim.git'
@@ -130,33 +120,29 @@
 
 - name: Install neovim stable
   block:
-    - name: Create neovim home variable  
-      shell: echo "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/neovim"
-      register: nvim_home
+  - name: Get latest neovim tag
+    community.general.github_release:
+      user: 'neovim'
+      repo: 'neovim'
+      action: latest_release
+    register: nvim_stable
+  
+  - name: Unarchive neovim-stable
+    unarchive:
+      src: "https://github.com/neovim/neovim/releases/download/{{ nvim_stable['tag'] }}/nvim-linux64.tar.gz"
+      dest: "/tmp"
+      remote_src: true
 
-    - name: Get latest neovim tag
-      community.general.github_release:
-        user: 'neovim'
-        repo: 'neovim'
-        action: latest_release
-      register: nvim_stable
-    
-    - name: Unarchive neovim-stable
-      unarchive:
-        src: "https://github.com/neovim/neovim/releases/download/{{ nvim_stable['tag'] }}/nvim-linux64.tar.gz"
-        dest: "{{ ansible_env.HOME }}/.local/programs/"
-        remote_src: true
+  - name: Rename neovim folder
+    shell: "[ -d {{ nvim_home.stdout }} ] && rm -r {{ nvim_home.stdout }}; mv /tmp/nvim-linux64 {{ nvim_home.stdout }}"
 
-    - name: Rename neovim folder
-      shell: "[ -d {{ nvim_home.stdout }} ] && rm -r {{ nvim_home.stdout }}; mv {{ ansible_env.HOME }}/.local/programs/nvim-linux64 {{ nvim_home.stdout }}"
-
-    - name: Symlink neovim binary
-      become: true
-      file:
-        src: "{{ nvim_home.stdout }}/bin/nvim"
-        dest: /usr/local/bin/nvim
-        state: link
-        force: true
+  - name: Symlink neovim binary
+    become: true
+    file:
+      src: "{{ nvim_home.stdout }}/bin/nvim"
+      dest: /usr/local/bin/nvim
+      state: link
+      force: true
   tags:
     - install
     - neovim
@@ -177,7 +163,7 @@
     
     
     - name: Run LspInstall
-      shell: nvim --headless -c "LspInstall --sync pylsp" -c q 
+      shell: nvim --headless -c "Mason" -c q 
       no_log: True
       ignore_errors: true
   tags:

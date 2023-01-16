@@ -1,4 +1,4 @@
-- name: Install dependencies
+- name: Install dotfile dependencies
   block:
   - include_role:
       name: update
