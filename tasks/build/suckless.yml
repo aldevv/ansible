@@ -1,0 +1,91 @@
+- name: install dependencies
+  block:
+  - include_role:
+      name: update 
+  - include_role:
+      name: base-devel
+  - include_role:
+      name: suckless
+  tags:
+    - install
+    - suckless
+    - st
+    - dmenu
+    - dwm
+
+
+- name: Clone suckless programs
+  block:
+    - name: Create programs folder
+      shell: "mkdir -p {{ suckless_home }}"
+
+    - name: Clone suckless programs
+      git:
+        repo: 'https://github.com/aldevv/suckless.git'
+        dest: "{{ suckless_home }}"
+        depth: 1
+  tags:
+    - install
+    - suckless
+    - st
+    - dmenu
+    - dwm
+
+- name: Build all suckless programs
+  become: true
+  shell: "make clean && make && make install"
+  args:
+    chdir: "{{ suckless_home }}/{{ item }}"
+  loop:
+    - "st"
+    - "dmenu"
+    - "dwm"
+  tags:
+    - suckless
+    - install
+    - st
+    - dmenu
+
+# - name: Build st 
+#   become: true
+#   shell: "make clean && make && make install"
+#   args:
+#     chdir: "{{ suckless_home }}/st"
+#   tags:
+#     - install
+#     - suckless
+#     - st
+
+# - name: dwm tasks
+#   block: 
+#   - name: install dwm
+#     become: true
+#     make:
+#       chdir: "{{ suckless_home }}/dwm"
+#       target: install
+#
+#   - name: Create xsessions file for dwm
+#     become: true
+#     shell: |
+#       mkdir -p /usr/share/xsessions/
+#       cat > /usr/share/xsessions/dwm.desktop << EOF
+#       [Desktop Entry]
+#       Name=Dwm
+#       Type=Application
+#       Exec=dwm
+#       EOF
+#   tags:
+#     - install
+#     - suckless
+#     - dwm
+
+# - name: Build dmenu 
+#   become: true
+#   shell: "make clean && make && make install"
+#   args:
+#     chdir: "{{ suckless_home }}/dmenu"
+#   tags:
+#     - install
+#     - suckless
+#     - dmenu
+

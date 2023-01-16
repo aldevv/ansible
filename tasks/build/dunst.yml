@@ -1,0 +1,99 @@
+- name: Install dunst dependencies
+  block:
+    - include_role:
+        name: update
+  tags:
+    - install
+    - dunst
+
+# https://github.com/dunst-project/dunst
+- name: Install Dunst Dependencies
+  when: "ansible_os_family == 'Debian'"
+  become: true
+  apt:
+    name:
+      - libnotify-dev
+      - libxinerama-dev
+      - libxrandr-dev
+      - libxss-dev
+      - libpango1.0-dev
+  tags:
+    - install
+    - dunst
+
+- name: Clone dunst 
+  git:
+    repo: 'https://github.com/dunst-project/dunst'
+    dest: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
+    depth: 1
+  tags:
+    - install
+    - dunst
+
+- name: Build dunst 
+  # it has a bug where it doesn't work unless we do it 3 times
+  shell: |
+    make WAYLAND=0 2>/dev/null
+    make WAYLAND=0 2>/dev/null
+    make WAYLAND=0 2>/dev/null
+  args:
+    chdir: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
+  ignore_errors: true
+  tags:
+    - install
+    - dunst
+
+- name: Install dunst
+  become: true
+  shell: make WAYLAND=0 install
+  args:
+    chdir: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
+  tags:
+    - install
+    - dunst
+
+# https://github.com/dunst-project/dunst
+- name: Install Dunst Dependencies
+  when: "ansible_os_family == 'Debian'"
+  become: true
+  apt:
+    name:
+      - libnotify-dev
+      - libxinerama-dev
+      - libxrandr-dev
+      - libxss-dev
+      - libpango1.0-dev
+  tags:
+    - install
+    - dunst
+
+- name: Clone dunst 
+  git:
+    repo: 'https://github.com/dunst-project/dunst'
+    dest: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
+    depth: 1
+  tags:
+    - install
+    - dunst
+
+- name: Build dunst 
+  # it has a bug where it doesn't work unless we do it 3 times
+  shell: |
+    make WAYLAND=0 2>/dev/null
+    make WAYLAND=0 2>/dev/null
+    make WAYLAND=0 2>/dev/null
+  args:
+    chdir: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
+  ignore_errors: true
+  tags:
+    - install
+    - dunst
+
+- name: Install dunst
+  become: true
+  shell: make WAYLAND=0 install
+  args:
+    chdir: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
+  tags:
+    - install
+    - dunst

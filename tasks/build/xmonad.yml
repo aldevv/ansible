@@ -1,3 +1,13 @@
+- name: install dependencies
+  block:
+  - include_role:
+      name: update
+  - include_role:
+      name: base-devel
+  tags:
+    - xmonad
+    - xmobar
+
 - name: Install dependencies
   block:
   - name: Install debian xmonad dependencies

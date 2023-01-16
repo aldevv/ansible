@@ -1,0 +1,12 @@
+- name: Create home folders
+  shell: |
+    [[ ! -d {{ work }} ]] && mkdir {{ work }}
+    [[ ! -d {{ projects }} ]] && mkdir {{ projects }}
+    [[ ! -d {{ learn }} ]] && mkdir {{ learn }}
+    [[ ! -d {{ playground }} ]] && mkdir {{ playground }}
+    [[ ! -d {{ code }} ]] && mkdir {{ code }}
+  args:
+    executable: /bin/bash
+  tags:
+    - install
+    - folders

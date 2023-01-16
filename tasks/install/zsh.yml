@@ -1,3 +1,15 @@
+- name: install zsh dependencies
+  block:
+  - include_role:
+      name: update
+  - include_role:
+      name: base-devel
+  tags:
+    - install
+    - core
+    - zsh
+    - zsh-plugins
+
 - name: Check oh-my-zsh is installed
   stat:
     path: ~/.oh-my-zsh/
@@ -56,6 +68,7 @@
       when: p.stat.exists == True
       shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc
   tags:
+    - install
     - zsh
     - zsh-plugins
 

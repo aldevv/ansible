@@ -25,6 +25,7 @@ dependencies for libgra:
                         - xutils-dev
 
 # use this guide
+# is been merged so no need to automate in the future
 https://www.maximilian-schillinger.de/articles/st-libxft-bgra-patch.html
 # usar ldconfig solo cuando se alla añadido el library path (donde esta el nuevo archivo .so)
 # en un nuevo archivo en /etc/ld.so.conf/mylibs.conf
@@ -41,12 +42,6 @@ https://www.maximilian-schillinger.de/articles/st-libxft-bgra-patch.html
 install xft_bgra
 
 
-# add dwm.desktop
-# add stow init so it adds .xprofile
-# do sudoers file thing
-# create playground
-# create playground/code
-# create learn
-# create projects
-# create work
-# add backlight logic (create the xorg.conf file, look at your wiki)
+# add keyboard logic (make capslock work like escape)
+# add touchpad logic (touch tap work)
+# add gpg

@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ -z $1 ]; then
-    docker build -t boot .
+    docker build -t dot .
 else
     docker build -t dot --build-arg TAGS="$1" .
 fi

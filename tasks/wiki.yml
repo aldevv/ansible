@@ -1,3 +1,9 @@
+- include_role:
+    name: auth
+  tags:
+    - install
+    - wiki
+
 - name: Clone wiki
   git:
     repo: git@github.com:aldevv/wiki.git
@@ -5,5 +11,5 @@
     depth: 1
     accept_hostkey: true
   tags:
-    - wiki
     - install
+    - wiki

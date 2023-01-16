@@ -1,132 +1,47 @@
 - hosts: localhost
-
-  # tested: debian
-  # - neovim / neovim-nightly
-  # - dotfiles
-  # - zsh
-  # - xmonad
-
-  # to_test:
-
-  # to_create:
-  # - picom
-
   vars:
     user: "{{ lookup('pipe', 'whoami') }}"
-    # dotfiles_repo: "git@github.com:aldevv/dotfiles-chez.git"
     dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
     dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
     suckless_home: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/suckless"
-    programs: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
+    work: "{{ lookup('env', 'WORK') or ansible_env.HOME ~ '/work' }}"
+    projects: "{{ lookup('env', 'PROJECTS') or ansible_env.HOME ~ '/projects' }}"
+    learn: "{{ lookup('env', 'LEARN') or ansible_env.HOME ~ '/learn' }}"
+    playground: "{{ lookup('env', 'PLAYGROUND') or ansible_env.HOME ~ '/playground' }}"
+    code: "{{ lookup('env', 'CODE') or ansible_env.HOME ~ '/playground/code' }}"
     # this one works but looks worse
     # suckless_home: "{{ lookup('env', 'PROGRAMS', default=ansible_env.HOME ~ '/programs') }}/suckless"
 
   roles:
     - role: auth
       tags:
-        - dotfiles-full 
         - install
         - ssh
-        - wiki
+        - auth
 
     - role: update
       tags:
-        - install
-        - dotfiles-full 
-        - neovim
-        - neovim-nightly
-        - core
-        - base-devel
-        - zsh
-        - zsh-plugins
-        - suckless
-        - st
-        - dmenu
-        - dwm
-        - xmonad
-        - dunst
+        - update
 
     - role: base-devel
       tags:
         - install
-        - neovim
-        - neovim-nightly
-        - core
-        - zsh
-        - suckless
-        - st
-        - dmenu
-        - dwm
-        - xmonad
+        - base-devel
 
     - role: core
       tags:
         - install
         - core
 
-    - role: suckless
-      tags:
-        - install
-        - suckless
-        - dwm
-        - dmenu
-        - st
-
-
-  tasks:
   # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
-
-    
-    - include_tasks: tasks/dotfiles.yml
-      tags:
-        - install
-        - neovim
-        - neovim-nightly
-        - dotfiles
-        - dotfiles-full
-
-    - name: Install zsh
-      include_tasks: tasks/zsh.yml
-      tags:
-        - core
-        - install
-        - zsh
-        - zsh-plugins
-
-    - include_tasks: tasks/neovim.yml
-      tags:
-        - install
-        - neovim
-        - neovim-nightly
-        - core
-
-    - include_tasks: tasks/suckless.yml
-      tags:
-        - install
-        - suckless
-        - st
-        - dmenu
-        # - dwm
-        - core
-       
-    # - include_tasks: tasks/xmonad.yml
-    #   tags:
-        # - install
-        # - xmonad
-       
-    - include_tasks: tasks/wiki.yml
-      tags:
-        - install
-        - wiki
-
-    - import_tasks: tasks/dunst.yml
-      tags:
-      - install
-      - core
-      - dunst
-
-    - import_tasks: tasks/build/dwm.yml
-      tags:
-      - install
-      - suckless
-      - dwm
+  tasks:
+    - include: tasks/dotfiles.yml
+    - include: tasks/install/zsh.yml
+    - include: tasks/build/neovim.yml
+    - include: tasks/build/suckless.yml
+    - include: tasks/wiki.yml
+    - include: tasks/build/dunst.yml
+    - include: tasks/install/fnm.yml
+    - include: tasks/folders.yml
+    - include: tasks/sudoers.yml
+    - include: tasks/hardware.yml

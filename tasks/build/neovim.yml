@@ -1,3 +1,14 @@
+- name: install dependencies neovim
+  block:
+    - include_role:
+        name: update
+    - include_role:
+        name: base-devel
+  tags:
+    - install
+    - neovim
+    - neovim-nightly
+
 - name: Stow nvim dotfile
   shell: stow nvim && cd -
   args:

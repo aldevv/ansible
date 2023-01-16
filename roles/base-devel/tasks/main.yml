@@ -1,3 +1,6 @@
+- include_role:
+    name: update
+
 - include_tasks: arch.yml
   when: "ansible_facts['os_family'] == 'Archlinux'"
 

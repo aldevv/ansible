@@ -1,6 +1,0 @@
----
-- name: Install NPM
-  become: yes
-  pacman:
-    name: npm
-
