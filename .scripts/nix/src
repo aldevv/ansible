@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export NIXPKGS_ALLOW_UNFREE=1
+. $HOME/.nix-profile/etc/profile.d/nix.sh

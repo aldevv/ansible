@@ -1,0 +1,13 @@
+- name: Install Nix Dependency
+  block:
+    - include_role:
+        name: nix
+  tags:
+    - slack
+
+- name: Install slack
+  shell: |
+    . .scripts/nix/src
+    nix-env -iA nixpkgs.slack
+  tags:
+    - slack

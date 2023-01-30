@@ -32,6 +32,11 @@
         - install
         - core
 
+    - role: nix
+      tags:
+        - install
+        - nix
+
   # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
   tasks:
     - include: tasks/dotfiles.yml
@@ -44,3 +49,4 @@
     - include: tasks/hardware.yml
     - include: tasks/build/dunst.yml
     - include: tasks/install/fnm.yml
+    - include: tasks/install/slack.yml

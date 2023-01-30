@@ -100,6 +100,7 @@
       - "xdotool"
       - "xbacklight"
       - "git-extras"
+      - "mpv"
 
 - name: Install misc programs
   become: true
