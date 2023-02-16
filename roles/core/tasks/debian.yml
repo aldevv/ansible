@@ -65,7 +65,6 @@
       - "picom"
       - "sxhkd"
       - "dunst"
-      - "sxiv"
       - "pavucontrol"
       - "firefox"
       - "zathura"

@@ -10,6 +10,8 @@
           - libxinerama-dev
           - libx11-xcb-dev
           - libxcb-res0-dev
+          - libimlib2-dev
+          - libexif-dev
             
     - name: Install Suckless Deps arch
       when: ansible_os_family == 'Archlinux'
