@@ -30,6 +30,7 @@
     name:
       - stow
       - git
+      - gawk
   tags:
     - install
     - neovim
