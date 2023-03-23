@@ -18,8 +18,6 @@ BACKSPACE=guess
 ## add picom from source
 https://github.com/yshui/picom/releases/tag/v9.1
 
-## add bat-extras
-
 ## install the libgra library patch
 don't forget to run ldconfig after it ends to refresh the cache!!
 dependencies for libgra: 
