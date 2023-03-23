@@ -6,7 +6,7 @@
   comment most of the programs installed in the base-devel role, so it speeds up
   
 # TODO
-add (/etc/default/keyboard file)
+## add (/etc/default/keyboard file)
 
 XKBMODEL=pc105
 XKBLAYOUT=latam
@@ -15,11 +15,12 @@ XKBOPTIONS=caps:escape
 BACKSPACE=guess
 
 
-add picom from source
+## add picom from source
 https://github.com/yshui/picom/releases/tag/v9.1
 
+## add bat-extras
 
-install the libgra library patch
+## install the libgra library patch
 don't forget to run ldconfig after it ends to refresh the cache!!
 dependencies for libgra: 
                         - xutils-dev
