@@ -18,6 +18,7 @@
         - libxss-dev
         - libasound2-dev
         - libxpm-dev
+        - trayer
 
   - name: Install Arch xmonad dependencies
     when: "ansible_os_family == 'Archlinux'"
