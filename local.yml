@@ -7,8 +7,7 @@
     work: "{{ lookup('env', 'WORK') or ansible_env.HOME ~ '/work' }}"
     projects: "{{ lookup('env', 'PROJECTS') or ansible_env.HOME ~ '/projects' }}"
     learn: "{{ lookup('env', 'LEARN') or ansible_env.HOME ~ '/learn' }}"
-    playground: "{{ lookup('env', 'PLAYGROUND') or ansible_env.HOME ~ '/playground' }}"
-    code: "{{ lookup('env', 'CODE') or ansible_env.HOME ~ '/playground/code' }}"
+    code: "{{ lookup('env', 'CODE') or ansible_env.HOME ~ '/code' }}"
     suckless_home: "{{ programs }}/suckless"
 
   roles:
