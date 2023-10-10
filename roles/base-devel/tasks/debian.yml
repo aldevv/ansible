@@ -21,3 +21,4 @@
       - python3-pip
       - gpg
       - wget
+      - stow

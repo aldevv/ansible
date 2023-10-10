@@ -59,7 +59,7 @@
 - name: Build copyq
   shell: |
     if [[ ! -f Makefile ]]; then
-      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local . ;
+      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX={{ builds }}/copyq .;
     fi
   args:
     chdir: "{{ programs }}/copyq"
@@ -80,6 +80,12 @@
   make: 
     target: install
     chdir: "{{ programs }}/copyq"
+  tags:
+    - install
+    - copyq
+
+- name: Stow copyq 
+  shell: stow -d {{ builds }} copyq
   tags:
     - install
     - copyq
