@@ -1,101 +1,55 @@
 - name: Install dunst dependencies
   block:
-    - include_role:
-        name: update
-  tags:
-    - install
-    - dunst
+    - include_role: 
+        name: base-devel
 
-# https://github.com/dunst-project/dunst
-- name: Install Dunst Dependencies
-  when: "ansible_os_family == 'Debian'"
-  become: true
-  apt:
-    name:
-      - libnotify-dev
-      - libxinerama-dev
-      - libxrandr-dev
-      - libxss-dev
-      - libpango1.0-dev
-  tags:
-    - install
-    - dunst
+    - name: Install {{p}} dependencies debian
+      when: "ansible_os_family == 'Debian'"
+      become: true
+      apt:
+        name:
+          - libnotify-dev
+          - libxinerama-dev
+          - libxrandr-dev
+          - libxss-dev
+          - libpango1.0-dev
+          - wayland-protocols
 
-- name: Clone dunst 
-  git:
-    repo: 'https://github.com/dunst-project/dunst'
-    dest: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
-    depth: 1
-  tags:
-    - install
-    - dunst
+    - name: Clone dunst 
+      git:
+        repo: "{{url}}"
+        dest: "{{pp}}"
+        depth: 1
 
-- name: Build dunst 
-  # it has a bug where it doesn't work unless we do it 3 times
-  shell: |
-    make WAYLAND=0 2>/dev/null
-    make WAYLAND=0 2>/dev/null
-    make WAYLAND=0 2>/dev/null
-  args:
-    chdir: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
-  ignore_errors: true
-  tags:
-    - install
-    - dunst
+    # man dunst build really sucks lol, need the version in BOTH or it will fail
+    - name: "Build {{p}}"
+      make: 
+        target: .
+        chdir: "{{pp}}"
+        params:
+          WAYLAND: 0
+          VERSION: "1.9.2"
+          PREFIX: "{{bp}}"
 
-- name: Install dunst
-  become: true
-  shell: make WAYLAND=0 install
-  args:
-    chdir: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}/dunst"
-  tags:
-    - install
-    - dunst
+    - name: "Install {{p}}"
+      make: 
+        target: install
+        chdir: "{{pp}}"
+        params:
+          WAYLAND: 0
+          VERSION: "1.9.2"
+          PREFIX: "{{bp}}"
+      ignore_errors: true
+        
 
-# https://github.com/dunst-project/dunst
-- name: Install Dunst Dependencies
-  when: "ansible_os_family == 'Debian'"
-  become: true
-  apt:
-    name:
-      - libnotify-dev
-      - libxinerama-dev
-      - libxrandr-dev
-      - libxss-dev
-      - libpango1.0-dev
-  tags:
-    - install
-    - dunst
+    - name: Stow dunst
+      shell: stow -d {{ builds }} {{p}}
 
-- name: Clone dunst 
-  git:
-    repo: 'https://github.com/dunst-project/dunst'
-    dest: "{{ programs }}/dunst"
-    depth: 1
-  tags:
-    - install
-    - dunst
-
-- name: Make dunst
-  make: 
-    target: .
-    chdir: "{{ programs }}/dunst"
-  tags:
-    - install
-    - dunst
-
-- name: Install dunst
-  make: 
-    target: install
-    chdir: "{{ programs }}/dunst"
-  environment: 
-    PREFIX: "{{builds}}/dunst"
-  tags:
-    - install
-    - dunst
-
-- name: Stow dunst
-  shell: stow -d {{ builds }} dunst
+  vars:
+    url: https://github.com/dunst-project/dunst
+    p: "dunst"
+    pp: "{{ programs }}/{{ p }}"
+    bp: "{{ builds }}/{{ p }}"
   tags:
     - install
     - dunst

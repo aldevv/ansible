@@ -1,6 +1,9 @@
 - name: Install copyq dependencies
   block:
-    - name: Install Debian dependencies to install copyq
+    - include_role: 
+        name: base-devel
+
+    - name: Install {{p}} dependencies debian
       when: ansible_os_family == "Debian"
       become: true
       apt:
@@ -24,7 +27,7 @@
           - qtwayland5
           - qtwayland5-dev-tools
 
-    - name: Install Arch dependencies
+    - name: Install {{p}} dependencies arch
       when: ansible_os_family == "Archlinux"
       become: true
       pacman:
@@ -35,57 +38,40 @@
           - qt5-svg
           - qt5-x11extras
           - libxtst
-          - extra-cmake-modules"\
-  tags:
-    - install
-    - copyq
+          - extra-cmake-modules
 
-- name: Create directory
-  file:
-    path: "{{ programs }}"
-    state: directory
-  tags:
-    - install
-    - copyq
+    - name: "Clone {{p}}"
+      git:
+        repo: "{{url}}"
+        dest: "{{pp}}"
 
-- name: Clone copyq colemak
-  git:
-    repo: https://github.com/aldevv/copyq-colemak
-    dest: "{{ programs }}/copyq"
-  tags:
-    - install
-    - copyq
+    - name: Build copyq
+      shell: |
+        if [[ ! -f Makefile ]]; then
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX={{bp}} .;
+        fi
+      args:
+        chdir: "{{pp}}"
 
-- name: Build copyq
-  shell: |
-    if [[ ! -f Makefile ]]; then
-      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX={{ builds }}/copyq .;
-    fi
-  args:
-    chdir: "{{ programs }}/copyq"
-  tags:
-    - install
-    - copyq
+    - name: Make copyq
+      make: 
+        target: .
+        chdir: "{{pp}}"
 
-- name: Make copyq
-  make: 
-    target: .
-    chdir: "{{ programs }}/copyq"
-  tags:
-    - install
-    - copyq
+    - name: "Install {{p}}"
+      become: true
+      make: 
+        target: install
+        chdir: "{{pp}}"
 
-- name: Install copyq
-  become: true
-  make: 
-    target: install
-    chdir: "{{ programs }}/copyq"
-  tags:
-    - install
-    - copyq
+    - name: Stow {{p}} 
+      shell: stow -d {{ builds }} {{p}}
 
-- name: Stow copyq 
-  shell: stow -d {{ builds }} copyq
+  vars:
+    url: https://github.com/aldevv/copyq-colemak
+    p: "copyq"
+    pp: "{{ programs }}/{{ p }}"
+    bp: "{{ builds }}/{{ p }}"
   tags:
     - install
     - copyq

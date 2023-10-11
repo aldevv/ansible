@@ -1,0 +1,29 @@
+- name: Install nix
+  block:
+  - name: check /nix exists
+    stat:
+      path: "/nix"
+    register: nix_exists
+
+  - name: creating /nix directory
+    become: yes
+    file: path=/nix state=directory owner="{{ ansible_env.USER | default('root') }}"
+    when: nix_exists.stat.exists == False
+
+  - name: Download nix
+    shell: curl -o /tmp/install -L https://nixos.org/nix/install
+    when: nix_exists.stat.exists == False
+
+  - name: Make executable
+    file:
+      path: "/tmp/install"
+      mode: '0755'
+    when: nix_exists.stat.exists == False
+
+  - name: Install nix
+    shell: /tmp/install
+    when: nix_exists.stat.exists == False
+  tags:
+    - install
+    - nix
+

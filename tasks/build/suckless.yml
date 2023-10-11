@@ -1,4 +1,4 @@
-- name: install suckless dependencies
+- name: install suckless programs 
   block:
   - include_role:
       name: update 
@@ -7,48 +7,35 @@
   - include_role:
       name: suckless
 
-  - name: Install dragon dependencies 
+  - name: Clone suckless programs
+    git:
+      repo: 'https://github.com/aldevv/suckless'
+      dest: "{{ suckless_home }}"
+      recursive: true
+      depth: 1
+
+  - name: Build all suckless programs
     become: true
-    apt:
-      name:
-        - libgtk-3-dev
-  tags:
-    - install
-    - suckless
-    - st
-    - dmenu
-    - dwm
-    - dragon
+    shell: "make clean && make && make PREFIX={{builds}}/{{item}} install && stow -d {{builds}} {{item}}"
+    args:
+      chdir: "{{ suckless_home }}/{{ item }}"
+    loop:
+      - "st"
+      - "dmenu"
+      - "dwm"
+      - "dragon"
 
-- name: Clone suckless programs
-  block:
-    - name: Create programs folder
-      shell: "mkdir -p {{ suckless_home }}"
+  - name: Create xsessions file for dwm
+    become: true
+    shell: |
+      [ ! -d "/usr/share/xsessions" ] && mkdir -p "/usr/share/xsessions"
+      cat > /usr/share/xsessions/dwm.desktop << EOF
+      [Desktop Entry]
+      Name=Dwm
+      Type=Application
+      Exec=dwm
+      EOF
 
-    - name: Clone suckless programs
-      git:
-        repo: 'https://github.com/aldevv/suckless'
-        dest: "{{ suckless_home }}"
-        recursive: true
-        depth: 1
-  tags:
-    - install
-    - suckless
-    - st
-    - dmenu
-    - dwm
-    - dragon
-
-- name: Build all suckless programs
-  become: true
-  shell: "make clean && make && make install"
-  args:
-    chdir: "{{ suckless_home }}/{{ item }}"
-  loop:
-    - "st"
-    - "dmenu"
-    - "dwm"
-    - "dragon"
   tags:
     - install
     - suckless

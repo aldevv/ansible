@@ -12,6 +12,7 @@
           - libxcb-res0-dev
           - libimlib2-dev
           - libexif-dev
+          - libgtk-3-dev
             
     - name: Install Suckless Deps arch
       when: ansible_os_family == 'Archlinux'

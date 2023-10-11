@@ -1,0 +1,89 @@
+- name: "Install {{p}} dependencies"
+  block:
+    - include_role: 
+        name: base-devel
+
+    - name: Install {{p}} dependencies debian
+      when: ansible_os_family == "Debian"
+      become: true
+      apt:
+        name:
+          - libconfig-dev
+          - libdbus-1-dev
+          - libegl-dev
+          - libev-dev
+          - libgl-dev
+          - libpcre2-dev
+          - libpixman-1-dev
+          - libx11-xcb-dev
+          - libxcb1-dev
+          - libxcb-composite0-dev
+          - libxcb-damage0-dev
+          - libxcb-dpms0-dev
+          - libxcb-glx0-dev
+          - libxcb-image0-dev
+          - libxcb-present-dev
+          - libxcb-randr0-dev
+          - libxcb-render0-dev
+          - libxcb-render-util0-dev
+          - libxcb-shape0-dev
+          - libxcb-util-dev
+          - libxcb-xfixes0-dev
+          - libxext-dev
+          - meson
+          - ninja-build
+          - uthash-dev
+
+    - name: Install {{p}} dependencies redhat
+      when: ansible_os_family == "redhat"
+      become: true
+      pacman:
+        name:
+          - dbus-devel
+          - gcc
+          - git
+          - libconfig-devel
+          - libdrm-devel
+          - libev-devel
+          - libX11-devel
+          - libX11-xcb
+          - libXext-devel
+          - libxcb-devel
+          - libGL-devel
+          - libEGL-devel
+          - meson
+          - pcre2-devel
+          - pixman-devel
+          - uthash-devel
+          - xcb-util-image-devel
+          - xcb-util-renderutil-devel
+          - xorg-x11-proto-devel
+
+    - name: "Clone {{p}}"
+      git:
+        repo: "{{ url }}"
+        dest: "{{ pp }}"
+
+    - name: "Build {{p}}"
+      shell: | 
+        meson setup --buildtype=release build
+        ninja -C build
+      args:
+        chdir: "{{ pp }}"
+
+    - name: "Install {{p}}"
+      shell: | 
+        meson configure -Dprefix={{bp}} build
+        ninja -C build install
+        stow -d {{builds}} {{p}}
+      args:
+        chdir: "{{ pp }}"
+
+  vars:
+    url: https://github.com/yshui/picom
+    p: "picom"
+    pp: "{{ programs }}/{{ p }}"
+    bp: "{{ builds }}/{{ p }}"
+  tags:
+    - install
+    - picom

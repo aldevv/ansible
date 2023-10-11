@@ -1,13 +1,15 @@
-- name: Create home folders
+- name: Create my folders
   shell: |
-    [[ ! -d {{ work }} ]] && mkdir {{ work }}
-    [[ ! -d {{ projects }} ]] && mkdir {{ projects }}
-    [[ ! -d {{ learn }} ]] && mkdir {{ learn }}
-    [[ ! -d {{ code }} ]] && mkdir {{ code }}
-    [[ ! -d {{ programs }} ]] && mkdir {{ programs }}
-    [[ ! -d {{ builds }} ]] && mkdir {{ builds }}
+    [ ! -d {{home}}/.local/bin ] && mkdir -p {{ home }}/.local/bin
+    [ ! -d {{ work }} ] && mkdir -p {{ work }}
+    [ ! -d {{ projects }} ] && mkdir -p {{ projects }}
+    [ ! -d {{ learn }} ] && mkdir -p {{ learn }}
+    [ ! -d {{ code }} ] && mkdir -p {{ code }}
+    [ ! -d {{ programs }} ] && mkdir -p {{ programs }}
+    [ ! -d {{ builds }} ] && mkdir -p {{ builds }}
   args:
-    executable: /bin/bash
+    executable: /bin/sh
+  no_log: True
+  ignore_errors: true
   tags:
-    - install
-    - folders
+    - always

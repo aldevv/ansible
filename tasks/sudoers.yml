@@ -1,17 +1,9 @@
-- name: get current user
-  shell: whoami
-  register: user
-  tags:
-    install
-    sudoers
-
-
 - name: add user to sudoers
   become: yes
   shell: |
-    echo -e '{{ user.stdout }}\tALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+    echo -e '{{ user }}\tALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
   args:
     executable: /bin/bash
   tags:
-    install
-    sudoers
+    - install
+    - sudoers
