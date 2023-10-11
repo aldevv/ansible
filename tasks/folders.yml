@@ -1,6 +1,6 @@
 - name: Create my folders
   shell: |
-    [ ! -d {{home}}/.local/bin ] && mkdir -p {{ home }}/.local/bin
+    [ ! -d {{home}}/.local/bin ] && mkdir -p {{ home }}/.local/bin 
     [ ! -d {{ work }} ] && mkdir -p {{ work }}
     [ ! -d {{ projects }} ] && mkdir -p {{ projects }}
     [ ! -d {{ learn }} ] && mkdir -p {{ learn }}

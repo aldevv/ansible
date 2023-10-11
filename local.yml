@@ -2,15 +2,12 @@
   vars:
     user: "{{ lookup('pipe', 'whoami') }}"
     home: "{{ lookup('env', 'HOME') }}"
-    dotfiles_repo_full: "git@github.com:aldevv/.dotfiles.git"
-    dotfiles_repo: "https://github.com/aldevv/.dotfiles.git"
     work: "{{ lookup('env', 'WORK') or ansible_env.HOME ~ '/work' }}"
     projects: "{{ lookup('env', 'PROJECTS') or ansible_env.HOME ~ '/projects' }}"
     learn: "{{ lookup('env', 'LEARN') or ansible_env.HOME ~ '/learn' }}"
     code: "{{ lookup('env', 'CODE') or ansible_env.HOME ~ '/code' }}"
     programs: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
     builds: "{{ lookup('env', 'BUILDS') or ansible_env.HOME ~ '/.local/builds' }}"
-    suckless_home: "{{ programs }}/suckless"
 
   roles:
     - role: auth
@@ -38,6 +35,7 @@
     - import_tasks: tasks/install/slack.yml
 
     - import_tasks: tasks/build/neovim.yml
+    - import_tasks: tasks/build/neovim-nightly.yml
     - import_tasks: tasks/build/suckless.yml
     - import_tasks: tasks/build/copyq.yml
     - import_tasks: tasks/build/dunst.yml

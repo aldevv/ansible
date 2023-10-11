@@ -4,4 +4,4 @@ if [[ -z "$1" ]]; then
   echo "enter a tag to run"
   exit
 fi
-ansible-playbook -t $1 -K  local.yml
+ansible-playbook -t $* -K  local.yml

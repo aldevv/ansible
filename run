@@ -1,4 +1,0 @@
-#!/bin/bash
-docker rm test
-docker build -t dot .
-docker run -it --name test dot ansible-playbook -K -t "$*" local.yml

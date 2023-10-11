@@ -2,8 +2,6 @@
   block:
   - include_role:
       name: base-devel
-  - include_role:
-      name: auth
 
   - include_tasks: tasks/build/gitsecret.yml 
     args:
@@ -15,8 +13,7 @@
     git:
        repo: "{{url}}"
        dest: "{{dotfiles}}"
-       recursive: true
-       accept_hostkey: true
+       recursive: false
 
   - name: Make scripts executable
     file:
@@ -33,8 +30,7 @@
 
   vars:
     dotfiles: "{{home}}/.dotfiles"
-    url: "git@github.com:aldevv/.dotfiles.git"
+    url: "https://github.com/aldevv/.dotfiles"
   tags: 
     - install
     - dotfiles
-

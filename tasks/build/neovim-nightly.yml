@@ -1,0 +1,79 @@
+- name: install neovim dependencies 
+  block:
+    - include_role:
+        name: update
+    - include_role:
+        name: base-devel
+
+    - name: Install Debian deps
+      when: ansible_os_family == 'Debian'
+      become: true
+      apt: 
+        name:
+          - curl
+          - ripgrep
+          - fd-find
+          - ninja-build
+          - gettext
+          - libtool
+          - libtool-bin
+          - autoconf
+          - automake
+          - cmake
+          - g++
+          - pkg-config
+          - unzip
+          - curl
+          - doxygen
+    
+    - name: Install Arch deps
+      when: ansible_os_family == 'Archlinux'
+      become: true
+      pacman: 
+        name:
+          - ripgrep
+          - fd
+          - base-devel
+          - cmake
+          - unzip
+          - ninja
+          - tree-sitter
+          - curl
+
+    - name: Install pynvim
+      pip:
+        name: 
+         - pynvim
+         - github3.py
+
+    - name: Install npm neovim pkg
+      become: true
+      npm:
+        name: neovim
+        global: yes
+
+    - name: Clone Neovim nightly
+      git:
+        repo: 'https://github.com/neovim/neovim.git'
+        dest: "{{ programs }}/neovim-nightly"
+        depth: 1
+
+    - name: Build neovim nightly
+      shell: "make clean && make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX={{bp}}"
+      args:
+        chdir: "{{pp}}"
+
+    - name: Install neovim nightly
+      make: 
+        target: install
+        chdir: "{{pp}}"
+
+    - name: stow neovim nightly
+      shell: stow -d {{builds}} neovim-nightly
+
+  vars:
+    pp: "{{programs}}/neovim-nightly"
+    bp: "{{builds}}/neovim-nightly"
+  tags:
+    - install
+    - neovim-nightly

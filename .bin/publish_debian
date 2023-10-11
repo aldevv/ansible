@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ansible_folder="$HOME/.local/share/ansible/"
+docker run -it --name work -v "$ansible_folder:/home/kanon/ansible" dot ansible-playbook -t neovim,dotfiles-safe -K local.yml
+docker commit work aldevv/work:latest
+docker push aldevv/work

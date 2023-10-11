@@ -1,5 +1,5 @@
-dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
-dest_pub_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
+dest_key: "{{ home }}/.ssh/id_rsa"
+dest_pub_key: "{{ home }}/.ssh/id_rsa.pub"
 id_rsa: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           64386135376433336666303837303833396463303961373539383239343234616265316532366666
@@ -141,7 +141,7 @@ id_rsa: !vault |
 id_rsa_pub: |
   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDjSEZfwWjIhWPXUB+KrP4vvB3+TUPsX3E8d1D9qUZ27nATT6pkRn938RDSXPkLDiMmjBJYP1w5DIL94Fax3sb/5x2K7UkzF/pddQGDPpA+/yveuzpQy19BrycioX9PNUwWHIMEBByckoJ21FLW7CpP1oW1jLucVnainX7O5TRU4ejm1APAt3T9UHzziHDRXFAxFD2PG4sIRSB1LsR1QJU/D0PNSALd8S+EeFkUa5A2EcDZqDYs9QPgErNYzGFyMD20OIl086kupk5kYqLAzkPYbWWUIzGwdF8FjKJ+ujbJSCK1Cbc/NIRY++EF0v3+EVl2ru2iTe4PCP0H901SDQfDQI9rRlfruHaRihhCmZ8tZQqFQ8TlDpiv9BVs4l+g7UPqufjFFVicFKzev9UBuHiPCl+a4EItqJ/TcH/Zk9sHjoINmw4KvyPWb9Fmz61RXeg8Hj9ulpaU6Sno0IlBrPCsIDw8BM0TAxFmrYgaAnXzB4BZnvYwAtj3xfjja8pELFU= kanon@hagane
 
-dest_key_gpg_folder: "{{ lookup('env', 'HOME') }}/.gnupg"
+dest_key_gpg_folder: "{{ home }}/.gnupg"
 
 gnu_priv: !vault |
           $ANSIBLE_VAULT;1.1;AES256

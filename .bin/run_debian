@@ -1,7 +1,7 @@
 #!/bin/bash
 ansible_folder="$HOME/.local/share/ansible/"
 if [ -n "$1" ]; then
-    docker run -it -v "$ansible_folder:/home/kanon/ansible" --rm dot ansible-playbook -t $1 -K  local.yml
+    docker run -it -v "$ansible_folder:/home/kanon/ansible" --rm dot ansible-playbook -t $* -K  local.yml
 else
     docker run -it -v "$ansible_folder:/home/kanon/ansible" --rm dot -K local.yml
 fi

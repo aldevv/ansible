@@ -5,7 +5,7 @@
     - include_role:
         name: base-devel
 
-    - name: Install Debian deps
+    - name: Install neovim deps debian
       when: ansible_os_family == 'Debian'
       become: true
       apt: 
@@ -13,8 +13,7 @@
           - curl
           - ripgrep
           - fd-find
-    
-    - name: Install Arch deps
+    - name: Install neovim deps arch
       when: ansible_os_family == 'Archlinux'
       become: true
       pacman: 
@@ -27,146 +26,29 @@
         name: 
          - pynvim
          - github3.py
-    
+
     - name: Install npm neovim pkg
       become: true
       npm:
         name: neovim
         global: yes
 
-    - name: Install neovim-nightly build deps debian
-      when: ansible_os_family == 'Debian'
-      apt:
-        name:
-          - ninja-build
-          - gettext
-          - libtool
-          - libtool-bin
-          - autoconf
-          - automake
-          - cmake
-          - g++
-          - pkg-config
-          - unzip
-          - curl
-          - doxygen
-      tags:
-        - neovim-nightly
+    - name: Get latest neovim tag
+      community.general.github_release:
+        user: 'neovim'
+        repo: 'neovim'
+        action: latest_release
+      register: nvim_stable
 
-    - name: Install neovim-nightly build deps arch
-      when: ansible_os_family == 'Archlinux'
-      apt:
-        name:
-          - base-devel
-          - cmake
-          - unzip
-          - ninja
-          - tree-sitter
-          - curl
-      tags:
-        - neovim-nightly
-  tags:
-    - install
-    - neovim
-    - neovim-nightly
+    - name: Unarchive neovim-stable
+      unarchive:
+        src: "https://github.com/neovim/neovim/releases/download/{{ nvim_stable['tag'] }}/nvim-linux64.tar.gz"
+        dest: "{{builds}}"
+        remote_src: true
 
+    - name: stow neovim binary
+      shell: "mv {{builds}}/nvim-linux64 {{builds}}/neovim-stable && stow -d {{builds}} neovim-stable"
 
-- name: Stow nvim dotfile
-  shell: stow nvim && cd -
-  args:
-    chdir: "{{ ansible_env.HOME }}/.dotfiles"
-  tags:
-    - install
-    - neovim
-    - neovim-nightly
-
-- name: Create bujo folder
-  shell: "mkdir -p ~/.cache/bujo {{ programs }}"
-  tags:
-    - install
-    - neovim
-    - neovim-nightly
-
-
-- name: Create neovim home variable  
-  shell: echo "{{ programs }}/neovim"
-  register: nvim_home
-  tags:
-    - install
-    - neovim
-    - neovim-nightly
-
-- name: Install neovim nightly
-  block:
-    - name: Clone Neovim nightly
-      git:
-        repo: 'https://github.com/neovim/neovim.git'
-        dest: "{{ nvim_home.stdout }}-nightly"
-        depth: 1
-    
-    - name: Build neovim nightly
-      shell: "make clean && make CMAKE_BUILD_TYPE=Release"
-      args:
-        chdir: "{{ nvim_home.stdout }}-nightly"
-    
-    - name: Install neovim nightly
-      become: true
-      shell: "make install"
-      args:
-        chdir: "{{ nvim_home.stdout }}-nightly"
-  tags:
-    - neovim-nightly
-
-
-- name: Install neovim stable
-  block:
-  - name: Get latest neovim tag
-    community.general.github_release:
-      user: 'neovim'
-      repo: 'neovim'
-      action: latest_release
-    register: nvim_stable
-  
-  - name: Unarchive neovim-stable
-    unarchive:
-      src: "https://github.com/neovim/neovim/releases/download/{{ nvim_stable['tag'] }}/nvim-linux64.tar.gz"
-      dest: "/tmp"
-      remote_src: true
-
-  - name: Rename neovim folder
-    shell: "[ -d {{ nvim_home.stdout }} ] && rm -r {{ nvim_home.stdout }}; mv /tmp/nvim-linux64 {{ nvim_home.stdout }}"
-
-  - name: Symlink neovim binary
-    become: true
-    file:
-      src: "{{ nvim_home.stdout }}/bin/nvim"
-      dest: /usr/local/bin/nvim
-      state: link
-      force: true
-  tags:
-    - install
-    - neovim
-
-
-- name: Setup neovim plugins
-  block: 
-    - name: Download Packer
-      git:
-        repo: https://github.com/wbthomason/packer.nvim
-        dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-        depth: 1
-    
-    - name: Run PackerSync
-      shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-      no_log: True
-      ignore_errors: true
-    
-    
-    - name: Run LspInstall
-      shell: nvim --headless -c "Mason" -c q 
-      no_log: True
-      ignore_errors: true
   tags:
     - neovim
-    - neovim-nightly
     - install

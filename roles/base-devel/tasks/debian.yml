@@ -22,3 +22,6 @@
       - gpg
       - wget
       - stow
+      - git
+      - gawk
+      - meson
