@@ -26,6 +26,7 @@
     - import_tasks: tasks/folders.yml
 
     - import_tasks: tasks/dotfiles.yml
+    - import_tasks: tasks/dotfiles-safe.yml
     - import_tasks: tasks/wiki.yml
     - import_tasks: tasks/sudoers.yml
     - import_tasks: tasks/hardware.yml
