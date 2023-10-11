@@ -1,12 +1,13 @@
 - name: Create my folders
   shell: |
-    [ ! -d {{home}}/.local/bin ] && mkdir -p {{ home }}/.local/bin 
-    [ ! -d {{ work }} ] && mkdir -p {{ work }}
-    [ ! -d {{ projects }} ] && mkdir -p {{ projects }}
-    [ ! -d {{ learn }} ] && mkdir -p {{ learn }}
-    [ ! -d {{ code }} ] && mkdir -p {{ code }}
-    [ ! -d {{ programs }} ] && mkdir -p {{ programs }}
-    [ ! -d {{ builds }} ] && mkdir -p {{ builds }}
+    [ ! -d {{home}}/.local/bin ] && mkdir -p {{ home }}/.local/bin &>/dev/null 
+    [ ! -d {{home}}/.local/share ] && mkdir -p {{ home }}/.local/share &>/dev/null 
+    [ ! -d {{ work }} ] && mkdir -p {{ work }} &>/dev/null
+    [ ! -d {{ projects }} ] && mkdir -p {{ projects }} &>/dev/null
+    [ ! -d {{ learn }} ] && mkdir -p {{ learn }} &>/dev/null
+    [ ! -d {{ code }} ] && mkdir -p {{ code }} &>/dev/null
+    [ ! -d {{ programs }} ] && mkdir -p {{ programs }} &>/dev/null
+    [ ! -d {{ builds }} ] && mkdir -p {{ builds }} &>/dev/null
   args:
     executable: /bin/sh
   no_log: True
