@@ -102,6 +102,7 @@
       - "mpv"
       - "fuse"
       - "libfuse2"
+      - "jc"
 
 - name: Install misc programs
   become: true
