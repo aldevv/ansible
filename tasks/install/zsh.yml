@@ -93,3 +93,15 @@
     - install
     - core
     - zsh
+
+
+- name: Clone fzf-zsh-plugin plugin
+  become: true
+  git:
+    repo: https://github.com/unixorn/fzf-zsh-plugin.git
+    dest: "~/.oh-my-zsh/custom/plugins/fzf-zsh-plugin"
+    depth: 1
+  tags:
+    - install
+    - core
+    - zsh
