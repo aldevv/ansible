@@ -34,12 +34,12 @@
       become: true
       package: name=zsh
 
+    - name: Install oh-my-zsh
+      shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+
     - name: Make zsh the default shell
       become: true
       shell: chsh -s $(which zsh)
-
-    - name: Install oh-my-zsh
-      shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 
     
   tags:
@@ -58,6 +58,12 @@
       git:
          repo: "https://github.com/zsh-users/zsh-syntax-highlighting"
          dest: "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+
+    - name: fzf plugin for zsh
+      git:
+         repo: "https://github.com/unixorn/fzf-zsh-plugin.git"
+         dest: "~/.oh-my-zsh/custom/plugins/fzf-zsh-plugin"
+         depth: 1
 
     - name: Check If stowed config
       stat:
@@ -88,19 +94,11 @@
     dest: "~/.oh-my-zsh/custom/themes/{{ item | basename }}"
     state: hard
     force: true
-  with_fileglob: '~/.config/zsh/themes/*'
+  with_fileglob: '{{ home }}/.config/zsh/themes/*'
   tags:
     - install
     - core
     - zsh
-
-
-- name: Clone fzf-zsh-plugin plugin
-  become: true
-  git:
-    repo: https://github.com/unixorn/fzf-zsh-plugin.git
-    dest: "~/.oh-my-zsh/custom/plugins/fzf-zsh-plugin"
-    depth: 1
   tags:
     - install
     - core

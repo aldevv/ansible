@@ -1,0 +1,19 @@
+- name: check latest bob
+  uri:
+    url: https://api.github.com/repos/MordechaiHadad/bob/releases/latest
+    return_content: true
+  register: bob_latest
+
+- name: "installing bob {{ bob_latest.json.tag_name }}"
+  loop: "{{ bob_latest.json.assets }}"
+  # when: "'x86_64-unknown-linux-musl.tar.xz' in item.name"
+  when: "'linux-x86_x64.zip' in item.name"
+  unarchive:
+    remote_src: yes
+    src: "{{ item.browser_download_url }}"
+    dest: "{{ builds }}/bob"
+    keep_newer: yes
+    # extra_opts:
+    # - --strip=1
+    # - --no-anchored
+    # - watchexec

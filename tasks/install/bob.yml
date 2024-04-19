@@ -1,0 +1,43 @@
+- name: install bob for neovim versioning
+  block:
+  - name: check latest {{ name }}
+    uri:
+      url: https://api.github.com/repos/{{ author_repo }}/releases/latest
+      return_content: true
+    register: bob_latest
+
+  - name: "create {{ builds }}/{{ name }} directory"
+    file:
+      path: "{{ builds }}/{{ name }}"
+      state: directory
+
+  - name: "download and unarchive {{ name }}"
+    loop: "{{ bob_latest.json.assets }}"
+    when: "'{{ pattern }}.{{ext}}' in item.name"
+    unarchive:
+      remote_src: yes
+      src: "{{ item.browser_download_url }}"
+      dest: "{{ builds }}/{{ name }}"
+      mode: 0755
+
+
+  - name: "make executable"
+    file:
+      path: "{{ build_path }}"
+      mode: 0755
+
+  - name: "create {{name}} symlink"
+    file:
+      src: "{{ build_path }}"
+      dest: "{{ home }}/.local/bin/{{name}}"
+      state: link
+
+  vars:
+    author_repo: MordechaiHadad/bob
+    name: bob
+    pattern: linux-x86_64
+    ext: zip
+    build_path: "{{ builds }}/{{name}}/{{name}}-{{pattern}}/{{name}}"
+  tags:
+    - install
+    - bob
