@@ -13,7 +13,7 @@
 
   - name: "download and unarchive {{ name }}"
     loop: "{{ bob_latest.json.assets }}"
-    when: "'{{ pattern }}.{{ext}}' in item.name"
+    when: "'{{ pattern }}.{{ext}}' in item.name and 'sha256' not in item.name" 
     unarchive:
       remote_src: yes
       src: "{{ item.browser_download_url }}"
@@ -38,10 +38,10 @@
   vars:
     author_repo: BurntSushi/ripgrep
     name: rg
-    pattern: x86_64-unknown-linux-musl
     ext: tar.gz
+    pattern: x86_64-unknown-linux-musl
 
     build_path: "{{ builds }}/{{name}}"
   tags:
     - install
-    - fd
+    - rg
