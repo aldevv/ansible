@@ -1,0 +1,47 @@
+- name: install bob for neovim versioning
+  block:
+  - name: check latest {{ name }}
+    uri:
+      url: https://api.github.com/repos/{{ author_repo }}/releases/latest
+      return_content: true
+    register: bob_latest
+
+  - name: "create {{ builds }}/{{ name }} directory"
+    file:
+      path: "{{ builds }}/{{ name }}"
+      state: directory
+
+  - name: "download and unarchive {{ name }}"
+    loop: "{{ bob_latest.json.assets }}"
+    when: "'{{ pattern }}.{{ext}}' in item.name"
+    unarchive:
+      remote_src: yes
+      src: "{{ item.browser_download_url }}"
+      dest: "{{ builds }}/{{ name }}"
+      mode: 0755
+
+  - name: "find extracted folder name"
+    shell: "ls {{ builds }}/{{ name }}"
+    register: bob_folder
+
+  - name: "make executable"
+    file:
+      path: "{{ build_path }}/{{ bob_folder.stdout }}/{{name}}"
+      mode: 0755
+
+  - name: "create {{name}} symlink"
+    file:
+      src: "{{ build_path }}/{{ bob_folder.stdout }}/{{name}}"
+      dest: "{{ home }}/.local/bin/{{name}}"
+      state: link
+
+  vars:
+    author_repo: BurntSushi/ripgrep
+    name: rg
+    pattern: x86_64-unknown-linux-musl
+    ext: tar.gz
+
+    build_path: "{{ builds }}/{{name}}"
+  tags:
+    - install
+    - fd
