@@ -1,5 +1,5 @@
 - name: "install neovim and requirements"
   block:
-  - include_tasks: tasks/bob.yml
-  - include_tasks: tasks/fd.yml
-  - include_tasks: tasks/rg.yml
+  - include_tasks: tasks/install/bob.yml
+  - include_tasks: tasks/install/fd.yml
+  - include_tasks: tasks/install/rg.yml
