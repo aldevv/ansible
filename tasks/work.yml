@@ -1,0 +1,7 @@
+- name: "install work stuff"
+  block:
+  - include_tasks: tasks/dotfiles-work.yml
+  - include_tasks: tasks/install/zsh.yml
+  - include_tasks: tasks/install/nvim.yml
+  tags:
+    - work
