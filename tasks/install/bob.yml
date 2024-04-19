@@ -21,14 +21,18 @@
       mode: 0755
 
 
+  - name: "find extracted folder name"
+    shell: "ls {{ builds }}/{{ name }}"
+    register: bob_folder
+
   - name: "make executable"
     file:
-      path: "{{ build_path }}"
+      path: "{{ build_path }}/{{ bob_folder.stdout }}/{{name}}"
       mode: 0755
 
   - name: "create {{name}} symlink"
     file:
-      src: "{{ build_path }}"
+      src: "{{ build_path }}/{{ bob_folder.stdout }}/{{name}}"
       dest: "{{ home }}/.local/bin/{{name}}"
       state: link
 
@@ -37,7 +41,8 @@
     name: bob
     pattern: linux-x86_64
     ext: zip
-    build_path: "{{ builds }}/{{name}}/{{name}}-{{pattern}}/{{name}}"
+
+    build_path: "{{ builds }}/{{name}}"
   tags:
     - install
     - bob
