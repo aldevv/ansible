@@ -8,6 +8,7 @@
     [ ! -d {{ code }} ] && mkdir -p {{ code }} &>/dev/null
     [ ! -d {{ programs }} ] && mkdir -p {{ programs }} &>/dev/null
     [ ! -d {{ builds }} ] && mkdir -p {{ builds }} &>/dev/null
+    [ ! -d {{ repos }} ] && mkdir -p {{ repos }} &>/dev/null
   args:
     executable: /bin/sh
   no_log: True
