@@ -7,6 +7,7 @@
     learn: "{{ lookup('env', 'LEARN') or ansible_env.HOME ~ '/learn' }}"
     code: "{{ lookup('env', 'CODE') or ansible_env.HOME ~ '/code' }}"
     programs: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
+    repos: "{{ lookup('env', 'REPOS') or ansible_env.HOME ~ '/repos' }}"
     builds: "{{ lookup('env', 'BUILDS') or ansible_env.HOME ~ '/.local/builds' }}"
 
   roles:
@@ -23,6 +24,7 @@
   # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
   tasks:
     # always
+    # test if this always runs without explicitly calling it
     - import_tasks: tasks/folders.yml
 
     - import_tasks: tasks/work.yml

@@ -1,6 +1,14 @@
 - name: Install dotfiles
   block:
+
+    # check if dotfiles directory exists
+  - name: Check if dotfiles directory exists
+    stat:
+      path: "{{home}}/.dotfiles"
+    register: dotfiles_dir
+
   - name: Download repo
+    when: dotfiles_dir.stat.exists == False
     shell: git clone {{url}} {{dotfiles}}
 
   - name: Make scripts executable

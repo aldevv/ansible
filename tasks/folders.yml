@@ -11,7 +11,8 @@
     [ ! -d {{ repos }} ] && mkdir -p {{ repos }} &>/dev/null
   args:
     executable: /bin/sh
-  no_log: True
+  # no_log: True
   ignore_errors: true
   tags:
+    - folders
     - always
