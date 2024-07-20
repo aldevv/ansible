@@ -1,6 +1,1 @@
 
-root nvim:
-  ln -s /home/kanon/.local/share/bob/nvim-bin/nvim /usr/local/bin/nvim
-
-root fnm for any node in root (so notes can be open without issues)
-  sudo curl -fsSL https://fnm.vercel.app/install | sudo zsh -s -- --install-dir "/usr/share"

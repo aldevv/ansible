@@ -7,21 +7,34 @@
     - core
     - fnm
 
+- name: current shell
+  shell: |
+    if command -v zsh; then
+      echo "zsh"
+    else 
+      echo "bash"
+    fi
+  register: shell_register
+  tags:
+    - install
+    - core
+    - fnm
+
 - name: Install fnm
-  become: yes
-  apt:
-    name: unzip
+  shell: |
+    curl -fsSL https://fnm.vercel.app/install | {{shell_register.stdout}} -s -- --skip-shell
+  args:
+    executable: "{{shell_register.stdout}}"
   tags:
     - install
     - fnm
 
-
-- name: Install fnm
+- name: Install fnm for root
+  become: true
   shell: |
-    export SHELL=$(which zsh)
-    curl -fsSL https://fnm.vercel.app/install | zsh -s -- --skip-shell
+    sudo curl -fsSL https://fnm.vercel.app/install | sudo {{shell_register.stdout}} -s -- --install-dir "/usr/share"
   args:
-    executable: /bin/bash
+    executable: "{{shell_register.stdout}}"
   tags:
     - install
     - fnm

@@ -1,48 +1,55 @@
 - name: install bob for neovim versioning
   block:
-  - name: check latest {{ name }}
-    uri:
-      url: https://api.github.com/repos/{{ author_repo }}/releases/latest
-      return_content: true
-    register: bob_latest
 
-  - name: "create {{ builds }}/{{ name }} directory"
+  - name: "create {{ builds }}/bob directory"
     file:
-      path: "{{ builds }}/{{ name }}"
+      path: "{{ builds }}/bob"
       state: directory
 
-  - name: "download and unarchive {{ name }}"
-    loop: "{{ bob_latest.json.assets }}"
-    when: "'{{ pattern }}.{{ext}}' in item.name"
-    unarchive:
-      remote_src: yes
-      src: "{{ item.browser_download_url }}"
-      dest: "{{ builds }}/{{ name }}"
-      mode: 0755
+  - name: get latest bob tag
+    community.general.github_release:
+      user: "{{author}}"
+      repo: "{{repo}}"
+      action: latest_release
+    register: bob_release
 
+  - name: Unarchive bob-release
+    unarchive:
+      src: "https://github.com/{{author}}/{{repo}}/releases/download/{{ bob_release['tag'] }}/bob-linux-x86_64.zip "
+      dest: "{{builds}}/bob"
+      remote_src: true
 
   - name: "find extracted folder name"
-    shell: "ls {{ builds }}/{{ name }}"
+    shell: "ls {{ builds }}/bob"
     register: bob_folder
 
   - name: "make executable"
     file:
-      path: "{{ build_path }}/{{ bob_folder.stdout }}/{{name}}"
+      path: "{{ build_path }}/{{ bob_folder.stdout }}/bob"
       mode: 0755
 
   - name: "create {{name}} symlink"
     file:
-      src: "{{ build_path }}/{{ bob_folder.stdout }}/{{name}}"
-      dest: "{{ home }}/.local/bin/{{name}}"
+      src: "{{ build_path }}/{{ bob_folder.stdout }}/bob"
+      dest: "{{ home }}/.local/bin/bob"
+      state: link
+
+  - name: "get stable neovim version"
+    shell: "{{ home }}/.local/bin/bob use stable"
+
+  - name: "create root neovim symlink"
+    become: true
+    file:
+      src: "{{home}}/.local/share/bob/nvim-bin/nvim"
+      dest: "/usr/local/bin/nvim"
       state: link
 
   vars:
-    author_repo: MordechaiHadad/bob
-    name: bob
+    author: MordechaiHadad
+    repo: bob
     pattern: linux-x86_64
     ext: zip
-
-    build_path: "{{ builds }}/{{name}}"
+    build_path: "{{ builds }}/bob"
   tags:
     - install
     - bob

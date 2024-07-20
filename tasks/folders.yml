@@ -16,3 +16,15 @@
   tags:
     - folders
     - always
+
+- name: Create root folders
+  become: true
+  shell: |
+    [ ! -d /usr/local/bin ] && mkdir -p /usr/local/bin &>/dev/null 
+  args:
+    executable: /bin/sh
+  # no_log: True
+  ignore_errors: true
+  tags:
+    - folders
+    - always
