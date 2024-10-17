@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# if dot image doesn't exist build it
+if [ -z "$(docker images -q dot)" ]; then
+    docker build -t dot .
+fi
+
 ansible_folder="$HOME/.local/share/ansible/"
 if [ -n "$1" ]; then
     docker run -it -v "$ansible_folder:/home/kanon/ansible" --rm dot ansible-playbook -t $* -K  local.yml

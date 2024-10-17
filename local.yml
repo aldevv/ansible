@@ -48,3 +48,4 @@
     - import_tasks: tasks/build/copyq.yml
     - import_tasks: tasks/build/dunst.yml
     - import_tasks: tasks/build/picom.yml
+    - import_tasks: tasks/build/autorandr.yml

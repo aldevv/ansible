@@ -1,0 +1,48 @@
+- name: Install autorandr dependencies
+  block:
+    - name: "Install desktop utils dependency"
+      become: true
+      package:
+        name: "desktop-file-utils"
+        state: present
+
+    - name: "Clone {{p}}"
+      git:
+        repo: "{{url}}"
+        dest: "{{pp}}"
+
+    - name: Build autorandr
+      become: true
+      shell: |
+        make install
+      args:
+        chdir: "{{pp}}"
+
+    - name: Check if systemd is the init system
+      command: ps -p 1 -o comm=
+      register: systemd_check
+
+    - name: enable autorandr systemd service
+      when: systemd_check.stdout == "systemd"
+      become: true
+      systemd:
+        name: autorandr.service
+        enabled: yes
+        state: started
+
+    - name: enable autorandr lid listener systemd service
+      when: systemd_check.stdout == "systemd"
+      become: true
+      systemd:
+        name: autorandr-lid-listener.service
+        enabled: yes
+        state: started
+
+  vars:
+    url: https://github.com/phillipberndt/autorandr
+    p: "autorandr"
+    pp: "{{ programs }}/{{ p }}"
+    bp: "{{ builds }}/{{ p }}"
+  tags:
+    - install
+    - autorandr
