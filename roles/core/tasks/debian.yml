@@ -103,6 +103,7 @@
       - "fuse"
       - "libfuse2"
       - "jc"
+      - "xscreensaver"
 
 - name: Install misc programs
   become: true
