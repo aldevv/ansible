@@ -11,7 +11,7 @@
         tags:
           - gitsecret
 
-  - name: Download repo
+  - name: Download repo normal
     git:
        repo: "{{url}}"
        dest: "{{dotfiles}}"

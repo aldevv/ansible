@@ -9,7 +9,7 @@
         tags:
           - gitsecret
 
-  - name: Download repo
+  - name: Download repo safe
     git:
        repo: "{{url}}"
        dest: "{{dotfiles}}"

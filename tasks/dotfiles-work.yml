@@ -7,7 +7,7 @@
       path: "{{home}}/.dotfiles"
     register: dotfiles_dir
 
-  - name: Download repo
+  - name: Download repo work
     when: dotfiles_dir.stat.exists == False
     shell: git clone {{url}} {{dotfiles}}
 
