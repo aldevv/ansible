@@ -1,6 +1,6 @@
 - name: Install pynvim
-  pip:
-    name: 
+  command: "pip install --break-system-packages {{ item }}"
+  with_items: 
       - pynvim
       - ranger-fm
       # - ueberzug no longer maintained
