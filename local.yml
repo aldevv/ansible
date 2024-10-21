@@ -43,6 +43,7 @@
     - import_tasks: tasks/install/rg.yml
     - import_tasks: tasks/install/bob.yml
     - import_tasks: tasks/install/pomo.yml
+    - import_tasks: tasks/install/doppler.yml
 
     - import_tasks: tasks/build/neovim.yml
     - import_tasks: tasks/build/neovim-nightly.yml
