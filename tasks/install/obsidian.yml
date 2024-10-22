@@ -1,0 +1,26 @@
+- name: install obsidian
+  block:
+  - name: get latest obsidian tag
+    community.general.github_release:
+      user: "{{author}}"
+      repo: "{{repo}}"
+      action: latest_release
+    register: obsidian_release
+
+  - name: download binary from github releases
+    get_url:
+      url: "https://github.com/{{ author }}/{{ repo }}/releases/download/{{ obsidian_release['tag'] }}/Obsidian_{{ obsidian_release['tag'] | replace('v', '') }}_amd64.deb"
+      dest: "{{ home }}/Downloads/obsidian.deb"
+
+  - name: install using apt
+    apt:
+      deb: "{{ home }}/Downloads/obsidian.deb"
+      state: present
+
+  vars:
+    author: obsidianmd
+    repo: obsidian-releases
+
+  tags:
+    - install
+    - obsidian

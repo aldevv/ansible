@@ -1,0 +1,14 @@
+- name: clone notes
+  block:
+  - include_role:
+      name: auth
+
+  - name: clone notes
+    git: 
+      repo: "git@github.com:aldevv/notes.git"
+      dest: "{{home}}/notes"
+      recursive: false
+      accept_hostkey: true
+  tags:
+    - install
+    - notes
