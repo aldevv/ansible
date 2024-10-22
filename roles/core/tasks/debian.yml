@@ -103,6 +103,7 @@
       - "jc"
       - "xscreensaver"
       - "blueman"
+      - "ueberzug"
 
 - name: Install misc programs
   become: true
