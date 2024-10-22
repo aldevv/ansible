@@ -99,6 +99,7 @@
       PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
   tags:
     - xmonad
+    - build
     - install
 
 # TODO fix this task plz
@@ -133,7 +134,7 @@
 
   - name: Clone xmobar repo
     git: 
-      repo: https://github.com/jaor/xmobar
+      repo: https://codeberg.org/xmobar/xmobar
       dest: ~/.local/build/xmobar
 
   - name: Install Stack project xmobar
@@ -144,6 +145,7 @@
       PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
   tags:
     - install
+    - build
     - xmonad
     - xmobar
 

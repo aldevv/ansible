@@ -1,0 +1,17 @@
+- name: "download fonts"
+  block: 
+  - include_role:
+      name: auth
+
+  - name: Download fonts
+    git:
+       repo: "{{url}}"
+       dest: "~/.local/share/fonts"
+       recursive: false
+       accept_hostkey: true
+
+  vars:
+    url: "git@github.com:aldevv/fonts.git"
+  tags:
+    - install
+    - fonts

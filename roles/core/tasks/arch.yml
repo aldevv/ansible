@@ -25,7 +25,6 @@
         - "fcitx-qt5"
         - "fcitx-configtool"
         - "fcitx-mozc"
-        - "fzf"
         - "tldr"
         - "python-pipenv"
         - "pass"

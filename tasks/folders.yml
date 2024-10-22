@@ -20,10 +20,11 @@
 - name: Create root folders
   become: true
   shell: |
-    [ ! -d /usr/local/bin ] && mkdir -p /usr/local/bin &>/dev/null 
+    [ ! -d /usr/local/bin ] && mkdir -p /usr/local/bin >/dev/null  2>/dev/null
   args:
     executable: /bin/sh
   # no_log: True
+  no_log: true
   ignore_errors: true
   tags:
     - folders

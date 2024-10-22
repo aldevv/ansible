@@ -29,6 +29,7 @@
     # test if this always runs without explicitly calling it
     - import_tasks: tasks/folders.yml
 
+    - import_tasks: tasks/fonts.yml
     - import_tasks: tasks/work.yml
     - import_tasks: tasks/dotfiles.yml
     - import_tasks: tasks/dotfiles-work.yml
@@ -45,11 +46,13 @@
     - import_tasks: tasks/install/bob.yml
     - import_tasks: tasks/install/pomo.yml
     - import_tasks: tasks/install/doppler.yml
+    - import_tasks: tasks/install/snap/zoom.yml
 
     # NOTE: these 2 are replaced by bob
     # - import_tasks: tasks/build/neovim.yml
     # - import_tasks: tasks/build/neovim-nightly.yml
     - import_tasks: tasks/build/suckless.yml
+    - import_tasks: tasks/build/xmonad.yml
     - import_tasks: tasks/build/dunst.yml
     - import_tasks: tasks/build/picom.yml
     - import_tasks: tasks/build/autorandr.yml

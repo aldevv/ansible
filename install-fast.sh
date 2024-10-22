@@ -7,4 +7,4 @@ fi
 
 apt install -y ansible
 
-sudo -u "$SUDO_USER" ansible-playbook -K --ask-vault-pass local.yml -t install,fast
+sudo -u "$SUDO_USER" ansible-playbook -K --ask-vault-pass local.yml -t install --skip-tags build
