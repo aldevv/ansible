@@ -22,8 +22,9 @@
           - fd
 
     - name: Install pynvim
-      pip:
-        name: 
+      become: true
+      command: "pip install --break-system-packages {{item}}"
+      with_items: 
          - pynvim
          - github3.py
 

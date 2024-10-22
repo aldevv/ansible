@@ -40,7 +40,6 @@
           VERSION: "1.9.2"
           PREFIX: "{{bp}}"
       ignore_errors: true
-        
 
     - name: Stow dunst
       shell: stow -d {{ builds }} {{p}}
@@ -53,3 +52,4 @@
   tags:
     - install
     - dunst
+    - build

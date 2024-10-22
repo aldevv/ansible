@@ -13,14 +13,14 @@
 - name: Check oh-my-zsh is installed
   stat:
     path: ~/.oh-my-zsh/
-  register: p
+  register: var_zsh
   tags:
     - install
     - core
     - zsh
 
 - name: Install zsh
-  when: p.stat.exists == False
+  when: var_zsh.stat.exists == False
   block:
     - name: Create history file
       shell: mkdir -p ~/.cache/zsh/ && touch ~/.cache/zsh/.zsh_history
@@ -68,10 +68,10 @@
     - name: Check If stowed config
       stat:
         path: ~/.zshrc
-      register: p
+      register: var_zsh
 
     - name: update our zshrc
-      when: p.stat.exists == True
+      when: var_zsh.stat.exists == True
       shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc
   tags:
     - install
@@ -81,14 +81,14 @@
 - name: Check If Custom Theme Available
   stat:
     path: ~/.config/zsh/themes
-  register: p
+  register: var_zsh
   tags:
     - install
     - core
     - zsh
 
 - name: Install Custom Theme If Possible
-  when: p.stat.exists == True
+  when: var_zsh.stat.exists == True
   file:
     src: "{{ item }}"
     dest: "~/.oh-my-zsh/custom/themes/{{ item | basename }}"

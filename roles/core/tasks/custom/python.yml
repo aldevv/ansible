@@ -1,10 +1,14 @@
-- name: Install pynvim
-  command: "pip install --break-system-packages {{ item }}"
-  with_items: 
-      - pynvim
-      - ranger-fm
-      # - ueberzug no longer maintained
-      - yq
-      - jc
-      - jq
-      - brotab
+- name: Install pip packages
+  become: yes
+  command: pip install --break-system-packages {{item}}
+  with_items:
+    - github3.py
+    - urllib3
+
+    - pynvim
+    - ranger-fm
+    # - ueberzug no longer maintained
+    - yq
+    - jc
+    - jq
+    # - brotab

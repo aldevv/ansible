@@ -9,7 +9,7 @@
 
 - name: current shell
   shell: |
-    if command -v zsh; then
+    if command -v zsh >/dev/null 2>/dev/null; then
       echo "zsh"
     else 
       echo "bash"

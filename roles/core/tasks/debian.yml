@@ -109,8 +109,6 @@
   apt:
     name:
       - gh
-      - docker.io
-      - docker-compose
       - exuberant-ctags
       - rsync
       - shellcheck

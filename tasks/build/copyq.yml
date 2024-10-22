@@ -46,12 +46,15 @@
         dest: "{{pp}}"
 
     - name: Build copyq
+      become: true
       shell: |
         if [[ ! -f Makefile ]]; then
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX={{bp}} .;
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local .;
         fi
       args:
         chdir: "{{pp}}"
+        executable: /bin/bash
+
 
     - name: Make copyq
       make: 
@@ -64,14 +67,14 @@
         target: install
         chdir: "{{pp}}"
 
-    - name: Stow {{p}} 
-      shell: stow -d {{ builds }} {{p}}
+    # - name: Stow {{p}} 
+    #   shell: stow -d {{ pp }} {{p}}
 
   vars:
     url: https://github.com/aldevv/copyq-colemak
     p: "copyq"
     pp: "{{ programs }}/{{ p }}"
-    bp: "{{ builds }}/{{ p }}"
   tags:
     - install
     - copyq
+    - build
