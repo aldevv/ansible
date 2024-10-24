@@ -105,7 +105,3 @@
     - install
     - core
     - zsh
-  tags:
-    - install
-    - core
-    - zsh
