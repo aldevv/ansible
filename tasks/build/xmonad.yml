@@ -34,10 +34,8 @@
         - libxinerama
         - libxrandr
         - libxss
-        - stack
 
   - name: Install stack for other distrubutions
-    when: (ansible_facts['os_family'] != "Debian") and (ansible_facts['os_family'] != "Archlinux" )
     shell: curl -sSL https://get.haskellstack.org/ | sh
   tags:
     - xmonad

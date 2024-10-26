@@ -1,25 +1,27 @@
-- name: install pomo
+- name: install {{repo}}
   block:
-  - name: get latest pomo tag
+  - name: get latest {{repo}} tag
     community.general.github_release:
       user: "{{author}}"
       repo: "{{repo}}"
       action: latest_release
     register: pomo_release
 
-  - name: download binary from github releases
+  - name: download {{repo}} binary from github releases
     get_url:
-      url:  "https://github.com/{{author}}/{{repo}}/releases/download/{{ pomo_release['tag'] }}/pomo-linux-amd64"
+      url:  "{{download_url}}/{{ pomo_release['tag'] }}/{{prefix}}"
       dest: "{{ bin }}/pomo"
 
   - name: "make executable"
     file:
-      path: "{{bin}}/pomo"
+      path: "{{bin}}/{{repo}}"
       mode: 0755
   vars:
     author: rwxrob
     repo: pomo
+    prefix: pomo-linux-amd64
     path: "{{ bin }}/{{ repo }}"
+    download_url: "https://github.com/{{author}}/{{repo}}/releases/download"
   tags:
     - install
     - pomo

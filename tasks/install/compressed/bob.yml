@@ -10,7 +10,7 @@
 
   - name: Unarchive {{repo}}
     unarchive:
-      src: "https://github.com/{{author}}/{{repo}}/releases/download/{{ bob_release['tag'] }}/{{prefix}}.{{extension}} "
+      src: "{{download_url}}/{{ bob_release['tag'] }}/{{prefix}}.{{extension}} "
       dest: "/tmp"
       remote_src: true
 
@@ -39,6 +39,7 @@
     repo: bob
     prefix: bob-linux-x86_64
     extension: zip
+    download_url: https://github.com/{{author}}/{{repo}}/releases/download
   tags:
     - install
     - bob
