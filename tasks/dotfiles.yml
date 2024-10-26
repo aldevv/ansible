@@ -25,11 +25,13 @@
   - name: Clone dotfiles recursive
     block:
       - name: Download repo normal
+        ignore_errors: true
         git:
           repo: "{{ url }}"
           dest: "{{ dotfiles }}"
           recursive: true
           accept_hostkey: true
+
     tags:
       - install
       - dotfiles
