@@ -1,6 +1,5 @@
 - name: install bob for neovim versioning
   block:
-
   - name: get latest {{repo}} tag
     community.general.github_release:
       user: "{{author}}"

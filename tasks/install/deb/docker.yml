@@ -21,6 +21,12 @@
         - containerd.io 
         - docker-buildx-plugin 
         - docker-compose-plugin
+
+  - name: Add permissions
+    become: true
+    shell: | 
+      groupadd docker
+      usermod -aG docker {{ user }}
   tags:
     - install
     - docker
