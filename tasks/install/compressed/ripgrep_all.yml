@@ -1,0 +1,46 @@
+
+- name: install {{repo}} 
+  block:
+
+  - name: get latest {{repo}} tag
+    community.general.github_release:
+      user: "{{author}}"
+      repo: "{{repo}}"
+      action: latest_release
+    register: "ripgrep_all_release"
+
+  - name: Unarchive {{repo}} release
+    unarchive:
+      src: "{{download_url}}/{{ ripgrep_all_release['tag'] }}/{{prefix}}{{ripgrep_all_release['tag']}}{{postfix}}.{{extension}}" 
+      dest: "/tmp"
+      remote_src: true
+
+
+  - name: "copy {{repo}} to {{bin}}"
+    copy:
+      src: "/tmp/{{prefix}}{{ripgrep_all_release['tag']}}{{postfix}}/{{item}}"
+      dest: "{{ bin }}"
+    with_items:
+      - rga
+      - rga-fzf
+      - rga-preproc
+
+  - name: "make executable"
+    file:
+      path: "{{ bin }}/{{item}}"
+      mode: 0755
+    with_items:
+      - rga
+      - rga-fzf
+      - rga-preproc
+
+  vars:
+    author: phiresky
+    repo: ripgrep_all
+    prefix: ripgrep_all-
+    postfix: -x86_64-unknown-linux-musl
+    extension: tar.gz
+    download_url: https://github.com/{{author}}/{{repo}}/releases/download
+  tags:
+    - install
+    - ripgrep_all

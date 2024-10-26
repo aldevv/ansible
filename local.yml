@@ -41,13 +41,19 @@
 
     - import_tasks: tasks/install/zsh.yml
     - import_tasks: tasks/install/fnm.yml
+    - import_tasks: tasks/install/compressed/ripgrep_all.yml
+    - import_tasks: tasks/install/compressed/bob.yml
+
     - import_tasks: tasks/install/slack.yml
     - import_tasks: tasks/install/fd.yml
     - import_tasks: tasks/install/rg.yml
-    - import_tasks: tasks/install/bob.yml
-    - import_tasks: tasks/install/pomo.yml
-    - import_tasks: tasks/install/doppler.yml
-    - import_tasks: tasks/install/obsidian.yml
+
+    - import_tasks: tasks/install/binary/pomo.yml
+
+    - import_tasks: tasks/install/script/doppler.yml
+
+    - import_tasks: tasks/install/deb/obsidian.yml
+
     - import_tasks: tasks/install/snap/zoom.yml
 
     # NOTE: these 2 are replaced by bob

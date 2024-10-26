@@ -68,8 +68,8 @@
 #    name:
 #      - 
 
-- name: Install ripgrep_all
-  shell: cargo install --locked ripgrep_all
+# - name: Install ripgrep_all
+#   shell: cargo install --locked ripgrep_all
 
 - name: Install bat
   shell: cargo install --locked bat
