@@ -43,6 +43,7 @@
     - install
     - xmonad
     - xmobar
+    - build
 
 - name: Clone repositories
   block:
@@ -70,6 +71,7 @@
   tags:
     - xmonad
     - install
+    - build
 
 - name: Install xmonad
   block:
@@ -110,6 +112,7 @@
     path: /usr/share/xsessions/
     state: directory
   tags:
+    - build
     - xmonad
     - install
 
@@ -123,8 +126,9 @@
     Exec=xmonad
     EOF
   tags:
-    - xmonad
     - install
+    - xmonad
+    - build
 #
 - name: Install xmobar
   block:
