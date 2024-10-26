@@ -34,5 +34,4 @@
     dotfiles: "{{home}}/.dotfiles"
     url: "https://github.com/aldevv/.dotfiles"
   tags: 
-    - install
     - dotfiles-work

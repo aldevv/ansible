@@ -10,7 +10,6 @@
     become: true
     apt:
       name:
-        - haskell-stack
         - libx11-dev
         - libxft-dev
         - libxinerama-dev
@@ -38,6 +37,7 @@
   - name: Install stack for other distrubutions
     shell: curl -sSL https://get.haskellstack.org/ | sh
   tags:
+    - install
     - xmonad
     - xmobar
 

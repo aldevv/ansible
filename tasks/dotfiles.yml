@@ -31,6 +31,11 @@
     args:
       chdir: "{{dotfiles}}"
 
+  - name: Run shortcuts script
+    shell: ./scripts/.local/share/scripts/automation/shortcuts
+    args:
+      chdir: "{{dotfiles}}"
+
   vars:
     dotfiles: "{{home}}/.dotfiles"
     url: "git@github.com:aldevv/.dotfiles.git"
