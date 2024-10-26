@@ -1,38 +1,28 @@
 - name: install bob for neovim versioning
   block:
 
-  - name: "create {{ builds }}/bob directory"
-    file:
-      path: "{{ builds }}/bob"
-      state: directory
-
-  - name: get latest bob tag
+  - name: get latest {{repo}} tag
     community.general.github_release:
       user: "{{author}}"
       repo: "{{repo}}"
       action: latest_release
     register: bob_release
 
-  - name: Unarchive bob-release
+  - name: Unarchive {{repo}}
     unarchive:
-      src: "https://github.com/{{author}}/{{repo}}/releases/download/{{ bob_release['tag'] }}/bob-linux-x86_64.zip "
-      dest: "{{builds}}/bob"
+      src: "https://github.com/{{author}}/{{repo}}/releases/download/{{ bob_release['tag'] }}/{{prefix}}.{{extension}} "
+      dest: "/tmp"
       remote_src: true
 
-  - name: "find extracted folder name"
-    shell: "ls {{ builds }}/bob"
-    register: bob_folder
+  - name: "copy {{repo}} to {{bin}}"
+    copy:
+      src: "/tmp/{{prefix}}/{{repo}}"
+      dest: "{{ bin }}"
 
   - name: "make executable"
     file:
-      path: "{{ build_path }}/{{ bob_folder.stdout }}/bob"
+      path: "{{ bin }}/{{repo}}"
       mode: 0755
-
-  - name: "create {{name}} symlink"
-    file:
-      src: "{{ build_path }}/{{ bob_folder.stdout }}/bob"
-      dest: "{{ home }}/.local/bin/bob"
-      state: link
 
   - name: "get stable neovim version"
     shell: "{{ home }}/.local/bin/bob use stable"
@@ -47,9 +37,8 @@
   vars:
     author: MordechaiHadad
     repo: bob
-    pattern: linux-x86_64
-    ext: zip
-    build_path: "{{ builds }}/bob"
+    prefix: bob-linux-x86_64
+    extension: zip
   tags:
     - install
     - bob

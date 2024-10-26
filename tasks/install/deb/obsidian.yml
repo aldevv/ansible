@@ -13,6 +13,7 @@
       dest: "{{ home }}/Downloads/obsidian.deb"
 
   - name: install using apt
+    become: true
     apt:
       deb: "{{ home }}/Downloads/obsidian.deb"
       state: present
