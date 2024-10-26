@@ -1,16 +1,17 @@
 - hosts: localhost
   vars:
     user: "{{ lookup('pipe', 'whoami') }}"
-    home: "{{ lookup('env', 'HOME') }}"
+    home: "{{ ansible_env.HOME }}"
     work: "{{ lookup('env', 'WORK') or ansible_env.HOME ~ '/work' }}"
-    projects: "{{ lookup('env', 'PROJECTS') or ansible_env.HOME ~ '/projects' }}"
-    learn: "{{ lookup('env', 'LEARN') or ansible_env.HOME ~ '/learn' }}"
-    code: "{{ lookup('env', 'CODE') or ansible_env.HOME ~ '/code' }}"
-    programs: "{{ lookup('env', 'PROGRAMS') or ansible_env.HOME ~ '/programs' }}"
-    repos: "{{ lookup('env', 'REPOS') or ansible_env.HOME ~ '/repos' }}"
-    builds: "{{ lookup('env', 'BUILDS') or ansible_env.HOME ~ '/.local/builds' }}"
-    local: "{{ ansible_env.HOME ~ '/.local' }}"
-    bin: "{{ ansible_env.HOME ~ '/.local/bin' }}"
+    projects: "{{ lookup('env', 'PROJECTS') or home ~ '/projects' }}"
+    learn: "{{ lookup('env', 'LEARN') or home ~ '/learn' }}"
+    code: "{{ lookup('env', 'CODE') or home ~ '/code' }}"
+    programs: "{{ lookup('env', 'PROGRAMS') or home ~ '/programs' }}"
+    repos: "{{ lookup('env', 'REPOS') or home ~ '/repos' }}"
+    builds: "{{ lookup('env', 'BUILDS') or home ~ '/.local/builds' }}"
+    local: "{{ home }} /.local"
+    bin: "{{home}}/.local/bin"
+    dotfiles: "{{home}}/.dotfiles"
 
   roles:
     - role: auth
