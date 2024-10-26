@@ -28,21 +28,15 @@
         chdir: "{{pp}}"
         params:
           WAYLAND: 0
-          VERSION: "1.9.2"
-          PREFIX: "{{bp}}"
 
     - name: "Install {{p}}"
+      become: true
       make: 
         target: install
         chdir: "{{pp}}"
         params:
           WAYLAND: 0
-          VERSION: "1.9.2"
-          PREFIX: "{{bp}}"
       ignore_errors: true
-
-    - name: Stow dunst
-      shell: stow -d {{ builds }} {{p}}
 
   vars:
     url: https://github.com/dunst-project/dunst

@@ -32,9 +32,12 @@
 
     - import_tasks: tasks/fonts.yml
     - import_tasks: tasks/work.yml
+
     - import_tasks: tasks/dotfiles.yml
-    - import_tasks: tasks/dotfiles-work.yml
-    - import_tasks: tasks/dotfiles-safe.yml
+
+    # TODO: fix it so that dotfiles-safe runs when fast running install, add new tag? fast install? divide the task into multiple blocks!!
+    # - import_tasks: tasks/dotfiles-work.yml
+    # - import_tasks: tasks/dotfiles-safe.yml
     - import_tasks: tasks/notes.yml
     - import_tasks: tasks/wiki.yml
     - import_tasks: tasks/sudoers.yml

@@ -1,13 +1,13 @@
 - name: Install dotfiles
   block:
-  - include_role:
-      name: base-devel
 
-  - include_tasks: tasks/build/gitsecret.yml 
-    args:
-      apply:
-        tags:
-          - gitsecret
+  - name: Install dotfiles Dependencies
+    become: true
+    apt:
+      name:
+        - stow
+        - wget # for gitsecret
+        - gettext
 
   - name: Download repo safe
     git:
@@ -32,4 +32,5 @@
     dotfiles: "{{home}}/.dotfiles"
     url: "https://github.com/aldevv/.dotfiles"
   tags: 
+    - install
     - dotfiles-safe
