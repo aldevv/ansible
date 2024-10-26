@@ -60,7 +60,6 @@
     # NOTE: these 2 are replaced by bob
     # - import_tasks: tasks/build/neovim.yml
     # - import_tasks: tasks/build/neovim-nightly.yml
-    - import_tasks: tasks/build/gitsecret.yml
     - import_tasks: tasks/build/suckless.yml
     - import_tasks: tasks/build/xmonad.yml
     - import_tasks: tasks/build/dunst.yml
