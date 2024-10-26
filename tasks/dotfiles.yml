@@ -1,15 +1,15 @@
 - name: Install dotfiles
   block:
   - include_role:
-      name: base-devel
-  - include_role:
       name: auth
 
-  - include_tasks: tasks/build/gitsecret.yml 
-    args:
-      apply:
-        tags:
-          - gitsecret
+  - name: Install Dependencies
+    become: true
+    apt:
+      name:
+        - stow
+        - wget # for gitsecret
+        - gettext
 
   - name: Download repo normal
     git:
@@ -32,9 +32,12 @@
       chdir: "{{dotfiles}}"
 
   - name: Run shortcuts script
-    shell: ./scripts/.local/share/scripts/automation/shortcuts
+    shell: bash ./scripts/.local/share/scripts/automation/shortcuts
     args:
       chdir: "{{dotfiles}}"
+
+  - import_tasks: tasks/build/gitsecret.yml 
+
 
   vars:
     dotfiles: "{{home}}/.dotfiles"
