@@ -37,11 +37,7 @@
     - name: Install oh-my-zsh
       shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 
-    - name: Make zsh the default shell for "{{ user }}"
-      ansible.builtin.user:
-        name: "{{ user }}"
-        shell: /bin/zsh
-
+    # for user is not possible
     - name: Make zsh the default shell for root
       become: true
       shell: chsh -s $(which zsh)

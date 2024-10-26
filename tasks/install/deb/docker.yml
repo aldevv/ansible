@@ -3,6 +3,10 @@
   - name: Add docker to apt repository
     become: true
     shell: |
+      if [[ -f /etc/apt/keyrings/docker.asc ]]; then
+        return 0
+      fi
+
       apt update
       apt install ca-certificates curl
       install -m 0755 -d /etc/apt/keyrings
@@ -25,8 +29,15 @@
   - name: Add permissions
     become: true
     shell: | 
+      if grep -q docker <<< "$(groups {{ user }})"; then
+        return 0
+      fi
+
       groupadd docker
       usermod -aG docker {{ user }}
+    args:
+      executable: /bin/bash
+
   tags:
     - install
     - docker
