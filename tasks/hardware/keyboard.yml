@@ -1,0 +1,14 @@
+- name: add keyboard config
+  become: true
+  shell: |
+      cat > /etc/X11/xorg.conf.d/00-keyboard.conf << EOF
+      Section "InputClass"
+          Identifier      "system-keyboard"
+          MatchIsKeyboard     "on"
+          Option      	  "XkbVariant" "nodeadkeys"
+          Option          "XkbOptions" "caps:escape"
+      EndSection 
+      EOF
+  tags:
+    - install
+    - keyboard

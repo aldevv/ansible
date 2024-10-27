@@ -1,0 +1,5 @@
+- name: clone wallpapers
+  git:
+    repo: "{{ url }}"
+    dest: ""
+    accept_hostkey: true

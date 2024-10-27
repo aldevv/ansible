@@ -1,0 +1,12 @@
+- name: Add tap support
+  become: true
+  shell: |
+    echo 'Section "InputClass"
+            Identifier "libinput touchpad catchall"
+            MatchIsTouchpad "on"
+            MatchDevicePath "/dev/input/event*"
+            Driver "libinput"
+            Option "Tapping" "on"
+    EndSection' > 40-libinput.conf
+  tags:
+    - touchpad

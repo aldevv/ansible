@@ -41,7 +41,9 @@
     - import_tasks: tasks/notes.yml
     - import_tasks: tasks/wiki.yml
     - import_tasks: tasks/sudoers.yml
-    - import_tasks: tasks/hardware.yml
+      # TODO: this only works for intel computers!!
+    - import_tasks: tasks/hardware/screen.yml
+    - import_tasks: tasks/hardware/keyboard.yml
 
     - import_tasks: tasks/install/zsh.yml
     - import_tasks: tasks/install/fnm.yml
@@ -57,6 +59,8 @@
     - import_tasks: tasks/install/script/doppler.yml
 
     - import_tasks: tasks/install/deb/obsidian.yml
+
+    - import_tasks: tasks/install/git/forgit.yml
 
     - import_tasks: tasks/install/snap/zoom.yml
     - import_tasks: tasks/install/deb/docker.yml

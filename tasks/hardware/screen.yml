@@ -1,0 +1,51 @@
+# NOTE: this broke login for a new computer
+# - name: enable xbacklight
+#   become: yes
+#   shell: |
+#     if [[ ! -e /sys/class/backlight/intel_backlight ]]; then
+#       exit 1
+#     fi
+#
+#     cat > /etc/X11/xorg.conf << EOF
+#         Section "Device"
+#             Identifier  "Intel Graphics" 
+#             Driver      "intel"
+#             Option      "Backlight"  "intel_backlight"
+#         EndSection
+#     EOF
+#   args:
+#     executable: /bin/bash
+#   tags:
+#     - install
+#     - hardware
+#
+
+- name: Add backlight control
+  block:
+  - name: install acpilight deps
+    become: true
+    apt:
+      name: 
+        - udev
+
+  - name: install acpilight for backlight control
+    git:
+      repo: "https://gitlab.com/wavexx/acpilight"
+      dest: /tmp/acpilight
+
+  - name: Install acpilight
+    become: true
+    make:
+      target: install
+      chdir: /tmp/acpilight
+
+  - name: add {{ user }} to group
+    become: true
+    shell: |
+        usermod -a -G video {{ user }}
+  tags:
+    - install
+    - screen
+
+
+

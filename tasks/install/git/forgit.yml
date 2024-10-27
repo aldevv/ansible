@@ -1,0 +1,14 @@
+- name: install forgit
+  block:
+  - name: clone forgit
+    git:
+      repo: https://github.com/wfxr/forgit
+      dest: /tmp/forgit
+
+  - name: move forgit binary
+    copy:
+      src: /tmp/forgit/bin/git-forgit
+      dest: "{{ bin }}"
+  tags:
+    - install
+    - forgit
