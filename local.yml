@@ -60,8 +60,6 @@
 
     - import_tasks: tasks/install/deb/obsidian.yml
 
-    - import_tasks: tasks/install/git/forgit.yml
-
     - import_tasks: tasks/install/snap/zoom.yml
     - import_tasks: tasks/install/deb/docker.yml
 
