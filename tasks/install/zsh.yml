@@ -73,7 +73,7 @@
       register: var_zsh
 
     - name: update our zshrc
-      when: var_zsh.stat.exists == True
+      when: var_zsh.stat.exists == False
       shell: sed -i 's/(git/(git zsh-autosuggestions zsh-syntax-highlighting/' ~/.zshrc
   tags:
     - install

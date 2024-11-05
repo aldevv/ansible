@@ -11,9 +11,18 @@
 
   - name: Install dependencies for dotfiles
     block: 
+      - name: Install dotfiles Dependencies on mac, no root
+        when: ansible_os_family == 'Darwin'
+        package:
+          name:
+            - stow
+            - wget  # for gitsecret
+            - gettext
+
       - name: Install dotfiles Dependencies
+        when: ansible_os_family != 'Darwin'
         become: true
-        apt:
+        package:
           name:
             - stow
             - wget  # for gitsecret

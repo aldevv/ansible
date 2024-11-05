@@ -5,7 +5,6 @@
         dest: "{{ dest_key | dirname }}"
         state: directory
         owner: "{{ user }}"
-        group: "{{ user }}"
         mode: 0700
 
     - name: Install ssh key
@@ -13,7 +12,6 @@
         content: "{{ id_rsa }}"
         dest: "{{ dest_key }}"
         owner: "{{ user }}"
-        group: "{{ user }}"
         mode: 0600
 
     - name: Install pub ssh key
@@ -21,7 +19,6 @@
         content: "{{ id_rsa_pub }}"
         dest: "{{ dest_pub_key }}"
         owner: "{{ user }}"
-        group: "{{ user }}"
         mode: 0644
 
     - name: Set authorized key took from file
@@ -39,7 +36,6 @@
         dest: "{{ dest_key_gpg_folder | dirname }}"
         state: directory
         owner: "{{ user }}"
-        group: "{{ user }}"
         mode: 0700
 
     - name: Create gpg key
@@ -47,14 +43,12 @@
         content: "{{ gnu_pub }}"
         dest: "{{home}}/public.key"
         owner: "{{ user }}"
-        group: "{{ user }}"
 
     - name: Create gpg key
       copy:
         content: "{{ gnu_priv }}"
         dest: "{{home}}/private.key"
         owner: "{{ user }}"
-        group: "{{ user }}"
 
     - name: Install gpg key
       shell: |
