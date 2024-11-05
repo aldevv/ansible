@@ -134,18 +134,18 @@
   block:
   - name: Create directory
     file:
-      path: ~/.local/build
+      path: ~/.local/builds
       state: directory
 
   - name: Clone xmobar repo
     git: 
       repo: https://codeberg.org/xmobar/xmobar
-      dest: ~/.local/build/xmobar
+      dest: ~/.local/builds/xmobar
 
   - name: Install Stack project xmobar
     shell: "stack install --flag xmobar:all_extensions"
     args:
-      chdir: ~/.local/build/xmobar
+      chdir: ~/.local/builds/xmobar
     environment:
       PATH: "{{ansible_env.HOME}}/.local/bin/:{{ansible_env.PATH}}"
   tags:
