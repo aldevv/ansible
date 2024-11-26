@@ -1,0 +1,70 @@
+- hosts: localhost
+  vars:
+    user: "{{ lookup('pipe', 'whoami') }}"
+    home: "{{ ansible_env.HOME }}"
+    work: "{{ lookup('env', 'WORK') or ansible_env.HOME ~ '/work' }}"
+    projects: "{{ lookup('env', 'PROJECTS') or home ~ '/projects' }}"
+    learn: "{{ lookup('env', 'LEARN') or home ~ '/learn' }}"
+    code: "{{ lookup('env', 'CODE') or home ~ '/code' }}"
+    programs: "{{ lookup('env', 'PROGRAMS') or home ~ '/programs' }}"
+    repos: "{{ lookup('env', 'REPOS') or home ~ '/repos' }}"
+    builds: "{{ lookup('env', 'BUILDS') or home ~ '/.local/builds' }}"
+    local: "{{ home }} /.local"
+    bin: "{{home}}/.local/bin"
+    dotfiles: "{{home}}/.dotfiles"
+
+  roles:
+    - role: auth
+      tags:
+        - install
+        - auth
+
+    - role: core
+      tags:
+        - install
+        - core
+
+  # check https://github.com/WaylonWalker/devtainer/blob/main/ansible/local.yml
+  tasks:
+    # always
+    # test if this always runs without explicitly calling it
+    - import_tasks: tasks/folders.yml
+
+    - import_tasks: tasks/work.yml
+
+    - import_tasks: tasks/dotfiles.yml
+
+    - import_tasks: tasks/notes.yml
+    - import_tasks: tasks/wiki.yml
+
+    - import_tasks: tasks/install/zsh.yml
+    - import_tasks: tasks/install/fnm.yml
+    - import_tasks: tasks/install/compressed/bob.yml
+
+    # installable by brew
+    # fd
+    # findutils -- for linuxcompatible find
+    # rg
+    # ripgrep-all
+
+    - import_tasks: tasks/install/binary/pomo.yml
+
+
+# Go System Preference > Keyboard > keyboard shortcuts and set Application Keyboard Shortcuts > All Applications
+#
+# Add shortcut
+#
+# Copy ^C
+#
+# Undo ^Z
+#
+# Redo ^⇧Z
+#
+# Cut ^X
+#
+# Paste ^V
+#
+# Select All ^A
+# https://superuser.com/questions/28078/remap-copy-and-paste-shortcuts-on-a-mac
+
+
