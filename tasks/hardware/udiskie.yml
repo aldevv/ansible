@@ -1,0 +1,14 @@
+- name: Configure udiskie
+  become: true
+  shell: |
+      mkdir -p /etc/polkit-1/localauthority/50-local.d
+      cat > /etc/polkit-1/localauthority/50-local.d/consolekit.pkla << EOF
+      [udiskie]
+      Identity=unix-group:plugdev
+      Action=org.freedesktop.udisks.*
+      ResultAny=yes
+      EOF
+      usermod -a -G plugdev {{ user }}
+  tags:
+    - install
+    - udiskie

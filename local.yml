@@ -41,9 +41,12 @@
     - import_tasks: tasks/notes.yml
     - import_tasks: tasks/wiki.yml
     - import_tasks: tasks/sudoers.yml
+    - import_tasks: tasks/root.yml
+
       # TODO: this only works for intel computers!!
     - import_tasks: tasks/hardware/screen.yml
     - import_tasks: tasks/hardware/keyboard.yml
+    - import_tasks: tasks/hardware/udiskie.yml
 
     - import_tasks: tasks/install/zsh.yml
     - import_tasks: tasks/install/fnm.yml

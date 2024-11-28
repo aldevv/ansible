@@ -1,0 +1,17 @@
+- name: add root stuff
+  become: yes
+  block:
+  - name: add root config
+    shell: |
+      # uncomment $EDITOR from sudoers file
+      sed -i 's/^#Defaults:%sudo env_keep += "EDITOR"/Defaults:%sudo env_keep+="EDITOR"/' /etc/sudoers
+
+
+  - name: add root nvim config
+    shell: |
+      if [[ -d {{dotfiles}} ]]; then
+        stow -d {{dotfiles}} -t /root nvim
+      fi
+  tags:
+    - install
+    - root

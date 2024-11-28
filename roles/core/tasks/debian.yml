@@ -66,6 +66,8 @@
       - "sxhkd"
       - "dunst"
       - "pavucontrol"
+      - "neovim"
+      - "udiskie"
       - "firefox"
       - "zathura"
       - "zathura-pdf-poppler"
