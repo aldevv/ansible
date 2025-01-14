@@ -57,7 +57,7 @@
     - import_tasks: tasks/install/fd.yml
     - import_tasks: tasks/install/rg.yml
 
-    - import_tasks: tasks/install/binary/pomo.yml
+    #- import_tasks: tasks/install/binary/pomo.yml
 
     - import_tasks: tasks/install/script/doppler.yml
 
