@@ -76,5 +76,4 @@
     pp: "{{programs}}/neovim-nightly"
     bp: "{{builds}}/neovim-nightly"
   tags:
-    - install
     - neovim-nightly
