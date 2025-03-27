@@ -1,0 +1,7 @@
+- name: "Install eget"
+  shell: |
+    curl https://zyedidia.github.io/eget.sh | sh
+    mv eget {{bin}}
+  tags:
+    - install
+    - eget

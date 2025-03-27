@@ -60,6 +60,7 @@
     #- import_tasks: tasks/install/binary/pomo.yml
 
     - import_tasks: tasks/install/script/doppler.yml
+    - import_tasks: tasks/install/script/eget.yml
 
     - import_tasks: tasks/install/deb/obsidian.yml
 
