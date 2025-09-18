@@ -1,0 +1,17 @@
+---
+- name: Create systemd logind configuration directory
+  file:
+    path: /etc/systemd/logind.conf.d
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Configure auto-suspend after 6 hours of inactivity
+  copy:
+    dest: /etc/systemd/logind.conf.d/auto-suspend.conf
+    content: |
+      [Login]
+      IdleAction=suspend
+      IdleActionSec=6h
+    mode: '0644'
+  become: yes

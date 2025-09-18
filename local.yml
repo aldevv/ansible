@@ -48,6 +48,8 @@
     - import_tasks: tasks/hardware/keyboard.yml
     - import_tasks: tasks/hardware/udiskie.yml
 
+    - import_tasks: tasks/system/auto-suspend.yml
+
     - import_tasks: tasks/install/zsh.yml
     - import_tasks: tasks/install/fnm.yml
     - import_tasks: tasks/install/compressed/ripgrep_all.yml
