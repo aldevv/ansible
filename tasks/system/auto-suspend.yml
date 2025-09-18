@@ -12,6 +12,6 @@
     content: |
       [Login]
       IdleAction=suspend
-      IdleActionSec=6h
+      IdleActionSec=3h
     mode: '0644'
   become: yes
