@@ -1,17 +1,46 @@
 ---
-- name: Create systemd logind configuration directory
-  file:
-    path: /etc/systemd/logind.conf.d
-    state: directory
-    mode: '0755'
+- name: Install xautolock package
+  package:
+    name: xautolock
+    state: present
   become: yes
 
-- name: Configure auto-suspend after 6 hours of inactivity
+- name: Create xautolock systemd service template
   copy:
-    dest: /etc/systemd/logind.conf.d/auto-suspend.conf
+    dest: /etc/systemd/system/xautolock@.service
     content: |
-      [Login]
-      IdleAction=suspend
-      IdleActionSec=3h
+      [Unit]
+      Description=Auto suspend after user inactivity for %i
+      After=graphical.target
+
+      [Service]
+      Type=simple
+      User=%i
+      ExecStart=/usr/bin/xautolock -time 180 -locker "systemctl suspend"
+      Restart=on-failure
+      Environment=DISPLAY=:0
+
+      [Install]
+      WantedBy=multi-user.target
     mode: '0644'
+  become: yes
+  notify: reload systemd
+
+- name: Enable xautolock service for current user
+  systemd:
+    name: "xautolock@{{ user }}.service"
+    enabled: yes
+    daemon_reload: yes
+  become: yes
+
+- name: Start xautolock service for current user
+  systemd:
+    name: "xautolock@{{ user }}.service"
+    state: started
+  become: yes
+
+- name: Remove old systemd logind auto-suspend config
+  file:
+    path: /etc/systemd/logind.conf.d/auto-suspend.conf
+    state: absent
   become: yes
