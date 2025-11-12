@@ -1,0 +1,73 @@
+# snixembed bridges StatusNotifierItem (SNI) tray icons to XEmbed protocol
+# Required to display Talon Voice tray icon in dwm status bar
+- name: Install snixembed from source
+  block:
+    - include_role:
+        name: base-devel
+
+    - name: Install {{p}} dependencies debian
+      when: "ansible_os_family == 'Debian'"
+      become: true
+      apt:
+        name:
+          - valac
+          - libgtk-3-dev
+          - libdbusmenu-gtk3-dev
+          - libdbusmenu-glib-dev
+
+    - name: Clone snixembed
+      git:
+        repo: "{{url}}"
+        dest: "{{pp}}"
+        depth: 1
+
+    - name: "Build {{p}}"
+      make:
+        target: .
+        chdir: "{{pp}}"
+
+    - name: "Install {{p}}"
+      become: true
+      make:
+        target: install
+        chdir: "{{pp}}"
+
+    - name: Create systemd user directory
+      file:
+        path: "{{ ansible_env.HOME }}/.config/systemd/user"
+        state: directory
+        mode: '0755'
+
+    - name: Create snixembed user systemd service
+      copy:
+        dest: "{{ ansible_env.HOME }}/.config/systemd/user/snixembed.service"
+        content: |
+          [Unit]
+          Description=snixembed - StatusNotifierItem to XEmbed proxy
+          After=graphical-session.target
+
+          [Service]
+          Type=simple
+          ExecStart=/usr/bin/snixembed
+          Restart=on-failure
+
+          [Install]
+          WantedBy=default.target
+        mode: '0644'
+
+    - name: Enable snixembed user service
+      systemd:
+        name: snixembed.service
+        enabled: yes
+        daemon_reload: yes
+        scope: user
+
+  vars:
+    url: https://git.sr.ht/~steef/snixembed
+    p: "snixembed"
+    pp: "{{ programs }}/{{ p }}"
+    bp: "{{ builds }}/{{ p }}"
+  tags:
+    - install
+    - snixembed
+    - build

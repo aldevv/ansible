@@ -1,0 +1,93 @@
+---
+# Install Talon Voice - voice control software
+# Includes snixembed to display Talon tray icon in dwm status bar
+
+- import_tasks: build/snixembed.yml
+  when: ansible_os_family != 'Darwin'
+
+- name: Install Talon Voice on Linux
+  block:
+    - name: Create Talon installation directory
+      file:
+        path: "{{ talon_install_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download Talon Voice
+      get_url:
+        url: "{{ talon_url }}"
+        dest: "/tmp/talon-linux.tar.xz"
+        mode: '0644'
+
+    - name: Extract Talon Voice
+      unarchive:
+        src: "/tmp/talon-linux.tar.xz"
+        dest: "{{ talon_install_dir }}"
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+
+    - name: Create Talon desktop entry
+      copy:
+        dest: ~/.local/share/applications/talon.desktop
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=Talon Voice
+          Comment=Voice control software
+          Exec={{ talon_install_dir }}/run.sh
+          Icon={{ talon_install_dir }}/resources/talon.png
+          Terminal=false
+          Categories=Utility;Accessibility;
+        mode: '0644'
+
+    - name: Create wrapper script to run Talon from command line
+      copy:
+        dest: "{{ ansible_env.HOME }}/.local/bin/talon"
+        content: |
+          #!/bin/bash
+          cd {{ talon_install_dir }} && ./run.sh
+        mode: '0755'
+
+    - name: Clean up downloaded tarball
+      file:
+        path: "/tmp/talon-linux.tar.xz"
+        state: absent
+
+  when: ansible_os_family != 'Darwin'
+  vars:
+    talon_url: "https://talonvoice.com/dl/latest/talon-linux.tar.xz"
+    talon_install_dir: "{{ ansible_env.HOME }}/.talon-voice"
+  tags:
+    - install
+    - talon
+
+- name: Configure Talon (all platforms)
+  block:
+    - name: Create Talon user config directory
+      file:
+        path: "{{ ansible_env.HOME }}/.talon/user"
+        state: directory
+        mode: '0755'
+
+    - name: Set dictation mode as default
+      copy:
+        dest: "{{ ansible_env.HOME }}/.talon/user/default_dictation_mode.py"
+        content: |
+          from talon import Module, actions, app
+
+          mod = Module()
+
+
+          def set_dictation_mode():
+              """Set dictation mode as default on startup"""
+              actions.mode.disable("command")
+              actions.mode.enable("dictation")
+
+
+          # Set dictation mode when Talon is ready
+          app.register("ready", set_dictation_mode)
+        mode: '0644'
+
+  tags:
+    - install
+    - talon
