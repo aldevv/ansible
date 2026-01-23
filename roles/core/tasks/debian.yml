@@ -66,6 +66,7 @@
       - "sxhkd"
       - "dunst"
       - "pavucontrol"
+      - "pasystray"
       - "neovim"
       - "udiskie"
       - "firefox"
