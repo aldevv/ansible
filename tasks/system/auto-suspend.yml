@@ -5,6 +5,17 @@
     state: present
   become: yes
 
+- name: Find XAUTHORITY path
+  shell: find /run/user/$(id -u) -name "Xauthority" 2>/dev/null | head -1
+  register: xauthority_find
+  changed_when: false
+  become: yes
+  become_user: "{{ user }}"
+
+- name: Set XAUTHORITY fact
+  set_fact:
+    xauthority_path: "{{ xauthority_find.stdout | trim or ansible_env.HOME + '/.Xauthority' }}"
+
 - name: Create xautolock systemd service template
   copy:
     dest: /etc/systemd/system/xautolock@.service
@@ -16,12 +27,14 @@
       [Service]
       Type=simple
       User=%i
-      ExecStart=/usr/bin/xautolock -time 180 -locker "systemctl suspend"
-      Restart=on-failure
+      ExecStart=/usr/bin/xautolock -time 180 -locker "systemctl suspend" -detectsleep
+      Restart=always
+      RestartSec=10
       Environment=DISPLAY=:0
+      Environment=XAUTHORITY={{ xauthority_path }}
 
       [Install]
-      WantedBy=multi-user.target
+      WantedBy=graphical.target
     mode: '0644'
   become: yes
   notify: reload systemd
