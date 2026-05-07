@@ -1,0 +1,36 @@
+- name: ensure Node.js >= 18 (prereq for npm-installed tools)
+  block:
+    - name: check existing node version
+      shell: command -v node >/dev/null && node -p "process.versions.node.split('.')[0]" || echo 0
+      register: node_major
+      changed_when: false
+
+    - name: install Node.js 20 from NodeSource (Debian)
+      become: true
+      shell: |
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+        apt-get install -y nodejs
+      when:
+        - ansible_facts['os_family'] == 'Debian'
+        - (node_major.stdout | int) < 18
+
+    - name: install Node.js LTS (Arch)
+      become: true
+      community.general.pacman:
+        name: nodejs-lts-iron
+        state: present
+      when:
+        - ansible_facts['os_family'] == 'Archlinux'
+        - (node_major.stdout | int) < 18
+
+    - name: install Node.js LTS (macOS via Homebrew)
+      community.general.homebrew:
+        name: node
+        state: present
+      when:
+        - ansible_facts['os_family'] == 'Darwin'
+        - (node_major.stdout | int) < 18
+  tags:
+    - install
+    - nodejs
+    - hunk
