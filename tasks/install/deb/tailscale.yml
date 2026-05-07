@@ -1,0 +1,37 @@
+- name: install tailscale
+  block:
+  - name: Add tailscale to apt repository
+    become: true
+    shell: |
+      if [[ -f /etc/apt/keyrings/tailscale.gpg ]]; then
+        return 0
+      fi
+
+      apt update
+      apt install -y ca-certificates curl
+      install -m 0755 -d /etc/apt/keyrings
+      codename=$(. /etc/os-release && echo "$VERSION_CODENAME")
+      curl -fsSL "https://pkgs.tailscale.com/stable/ubuntu/${codename}.noarmor.gpg" -o /etc/apt/keyrings/tailscale.gpg
+      chmod a+r /etc/apt/keyrings/tailscale.gpg
+
+      echo "deb [signed-by=/etc/apt/keyrings/tailscale.gpg] https://pkgs.tailscale.com/stable/ubuntu ${codename} main" | tee /etc/apt/sources.list.d/tailscale.list > /dev/null
+      apt update
+    args:
+      executable: /bin/bash
+
+  - name: Install tailscale using apt
+    become: true
+    apt:
+      name:
+        - tailscale
+
+  - name: Enable tailscaled service
+    become: true
+    systemd:
+      name: tailscaled
+      enabled: true
+      state: started
+
+  tags:
+    - install
+    - tailscale

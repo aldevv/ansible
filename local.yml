@@ -70,6 +70,7 @@
 
     - import_tasks: tasks/install/snap/zoom.yml
     - import_tasks: tasks/install/deb/docker.yml
+    - import_tasks: tasks/install/deb/tailscale.yml
 
     # NOTE: these 2 are replaced by bob
     # - import_tasks: tasks/build/neovim.yml

@@ -39,6 +39,8 @@
 
     - import_tasks: tasks/install/zsh.yml
     - import_tasks: tasks/install/fnm.yml
+    - import_tasks: tasks/install/nodejs.yml
+    - import_tasks: tasks/install/hunk.yml
     - import_tasks: tasks/install/compressed/bob.yml
 
     # installable by brew
