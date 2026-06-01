@@ -1,0 +1,25 @@
+---
+# earlyoom watches absolute free RAM/swap and kills the heaviest process
+# before the system thrashes itself into a freeze. systemd-oomd ships with
+# Ubuntu and watches cgroup memory pressure on the user slice, but on
+# tiling-WM setups (xmonad) without GNOME's session policies it doesn't
+# react fast enough when swap fills. earlyoom complements it: whichever
+# trips first wins. Defaults kick in below 10% free RAM AND 10% free swap.
+
+- name: install earlyoom
+  block:
+    - name: install earlyoom package
+      become: true
+      package:
+        name: earlyoom
+        state: present
+
+    - name: enable and start earlyoom service
+      become: true
+      systemd:
+        name: earlyoom.service
+        enabled: true
+        state: started
+  tags:
+    - install
+    - earlyoom

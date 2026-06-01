@@ -1,0 +1,32 @@
+---
+# Ensure xdg-desktop-portal-gnome starts on user login so the ScreenCast
+# portal interface is available (required by Kooha and other Wayland
+# screen recorders). The unit ships as `static`, so we wire it in via a
+# default.target.wants symlink rather than `systemctl --user enable`.
+
+- name: Check whether xdg-desktop-portal-gnome is installed
+  stat:
+    path: /usr/lib/systemd/user/xdg-desktop-portal-gnome.service
+  register: portal_gnome_unit
+
+- name: Configure xdg-desktop-portal-gnome autostart
+  when: portal_gnome_unit.stat.exists
+  block:
+    - name: Ensure user default.target.wants exists
+      file:
+        path: "{{ home }}/.config/systemd/user/default.target.wants"
+        state: directory
+        mode: '0755'
+
+    - name: Symlink xdg-desktop-portal-gnome into default.target.wants
+      file:
+        src: /usr/lib/systemd/user/xdg-desktop-portal-gnome.service
+        dest: "{{ home }}/.config/systemd/user/default.target.wants/xdg-desktop-portal-gnome.service"
+        state: link
+
+    - name: Start xdg-desktop-portal-gnome (user scope)
+      systemd:
+        name: xdg-desktop-portal-gnome.service
+        state: started
+        daemon_reload: yes
+        scope: user

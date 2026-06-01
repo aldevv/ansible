@@ -49,6 +49,8 @@
     - import_tasks: tasks/hardware/udiskie.yml
 
     - import_tasks: tasks/system/auto-suspend.yml
+    - import_tasks: tasks/system/portal-screencast.yml
+    - import_tasks: tasks/system/earlyoom.yml
 
     - import_tasks: tasks/install/zsh.yml
     - import_tasks: tasks/install/fnm.yml
